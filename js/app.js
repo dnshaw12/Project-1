@@ -1,6 +1,13 @@
 console.log('This Java File has Loaded');
 
 game = {
+	player1 = null,
+	player1Class = null,
+	player2 = null,
+	player2Class = null,
+	turn = 1,
+
+
 	makeBoard(){
 		for (let i = 1; i <= 109; i++){
 			const $div = $('<div/>');
@@ -15,10 +22,20 @@ game = {
 				$('#game-board').append($div)
 			}
 		}
+	},
+
+	makePlayer1(){
+		if ($('#p1Input')[0] === null || game.player1 === null) {
+			alert('Please input your name and choose a class!')
+		} else {
+
+		} 
 	}
 }
 
 game.makeBoard();
+
+
 
 // const slider1 = () => {
 // 	if ($('#player-one-stats').css('width') === '0px') {

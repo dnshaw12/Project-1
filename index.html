@@ -6,6 +6,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 </head>
 <body>
+	
 	<div class="stat-bar">
 		<div class="stats" id="player-one-stats">
 			<div>HP: <span id='p1HP'>0</span></div>
@@ -19,6 +20,26 @@
 	</header>
 
 	<main>
+		<div id="p1StartScreen">
+			<h1>Player 1! Ready yourself!</h1>
+			<input type="text" name="name" placeholder="Your name!" autofocus id="p1Input">
+			<div>
+				<button id="fighter">Fighter!</button>
+				<button id="wizard">Wizard!</button>
+				<button id="rogue">Rogue!</button>
+			</div>
+			<button id="p1StartButton">Ready!</button>
+		</div>
+		<div id="p2StartScreen">
+			<h1>Player 2! Ready yourself!</h1>
+			<input type="text" name="name" placeholder="Your name!" autofocus id="p2Input">
+			<div>
+				<button id="fighter">Fighter!</button>
+				<button id="wizard">Wizard!</button>
+				<button id="rogue">Rogue!</button>
+			</div>
+			<button id="startButton">Ready!</button>
+		</div>
 		<div id="game-board"></div>
 	</main>
 
