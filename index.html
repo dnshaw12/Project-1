@@ -8,7 +8,7 @@
 <body>
 	
 	<div class="stat-bar">
-		<div class="stats" id="player-one-stats">
+		<div class="stats p1Hidden" id="player-one-stats">
 			<div>HP: <span id='p1HP'>0</span></div>
 			<button id="p1Attack">ATTACK</button>
 		</div>
@@ -23,7 +23,7 @@
 		<div id="p1StartScreen">
 			<h1>Player 1! Ready yourself!</h1>
 			<input type="text" name="name" placeholder="Your name!" autofocus id="p1Input">
-			<div>
+			<div id="p1Buttons">
 				<button id="fighter">Fighter!</button>
 				<button id="wizard">Wizard!</button>
 				<button id="rogue">Rogue!</button>
@@ -33,21 +33,21 @@
 		<div id="p2StartScreen">
 			<h1>Player 2! Ready yourself!</h1>
 			<input type="text" name="name" placeholder="Your name!" autofocus id="p2Input">
-			<div>
+			<div id="p2Buttons">
 				<button id="fighter">Fighter!</button>
 				<button id="wizard">Wizard!</button>
 				<button id="rogue">Rogue!</button>
 			</div>
-			<button id="startButton">Ready!</button>
+			<button id="p2StartButton">Ready!</button>
 		</div>
 		<div id="game-board"></div>
 	</main>
 
 	<div class="stat-bar">
 		<div class="arrow-button" id="ArrB2"><</div>
-		<div class="stats" id="player-two-stats">
-			<div>HP: <span id='p1HP'>0</span></div>
-			<button id="p1Attack">ATTACK</button>
+		<div class="stats p2Hidden" id="player-two-stats">
+			<div>HP: <span id='p2HP'>0</span></div>
+			<button id="p2Attack">ATTACK</button>
 		</div>
 	</div>
 
