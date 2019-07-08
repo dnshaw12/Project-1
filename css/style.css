@@ -1,0 +1,74 @@
+body {
+	background-color: rgb(56, 2, 2);
+	display: flex;
+	width: 100%;
+	margin: 0;
+}
+
+header {
+	position: fixed;
+	top: 0;
+	height: 5%;
+	font-size: 5vh;
+	color: rgb(218,165,32);
+	width: 100%;
+	text-align: center;
+}
+
+main {
+	width: 100vw;
+	/*background-color: white;*/
+	display: flex;
+	align-items: center;
+	justify-content: space-evenly;
+}
+
+#game-board {
+	width: 80vh;
+	height: 80vh;
+	background-color: black;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.stat-bar {
+	height: 100vh;
+	text-align: center;
+	background-color: yellow;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	overflow-x: hidden;
+}
+
+#player-one-stats {
+	width: 15vw;
+	position: relative;
+	max-width: 70vw;
+	z-index: 1;
+}
+
+#player-two-stats {
+	width: 15vw;
+	position: relative;
+	max-width: 70vw;
+	z-index: 1;
+}
+
+/*.stats {
+	width: 0px;
+	position: relative;
+	max-width: 15vw;
+}*/
+
+.arrow-button {
+	min-width: 25px;
+	background-color: purple;
+	height: 100%;
+	visibility: hidden;
+}
+
+
+

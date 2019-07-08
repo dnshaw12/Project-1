@@ -3,8 +3,32 @@
 <head>
 	<title></title>
 	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 </head>
 <body>
+	<div class="stat-bar">
+		<div class="stats" id="player-one-stats">
+			<div>HP: <span id='p1HP'>0</span></div>
+			<button id="p1Attack">ATTACK</button>
+		</div>
+		<div class="arrow-button" id="ArrB1">></div>
+	</div>
+
+	<header>
+		<div id="turn-number">Turn 1</div>
+	</header>
+
+	<main>
+		<div id="game-board"></div>
+	</main>
+
+	<div class="stat-bar">
+		<div class="arrow-button" id="ArrB2"><</div>
+		<div class="stats" id="player-two-stats">
+			<div>HP: <span id='p1HP'>0</span></div>
+			<button id="p1Attack">ATTACK</button>
+		</div>
+	</div>
 
 	<script type="text/javascript" src="js/classes.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
