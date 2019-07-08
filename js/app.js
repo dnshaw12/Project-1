@@ -5,6 +5,7 @@ const game = {
 	player2Class: null,
 	turn: 1,
 	whichPlayer: 1,
+	board:[],
 
 	makePlayer1(){
 		console.log(this);
@@ -29,28 +30,78 @@ const game = {
 	},
 
 	makeBoard(){
-		for (let i = 1; i <= 109; i++){
-			const $div = $('<div/>');
-			$div.css({
-				'width':'10%',
-				'height':'10%'
-			});
-			if (i === 1) {
-				const $icon = $(`<img src="${this.player1.icon}" id="p1Icon" height="100%" width="100%">`)
-				$div.append($icon)
-			} else if (i === 109) {
-				const $icon = $(`<img src="${this.player2.icon}" id="p2Icon" height="100%" width="100%">`)
-				$div.append($icon)
-			};
-			if (i%11 !== 0) {
+		for (let i = 1; i <= 10; i++){
+			const boardRow = [];
+			for (let j = 1; j <= 10; j++){
+				const $div = $(`<div data-column-num="${j}" id="${j}-${i}" data-row-num="${i}"></div>`);
+				$div.css({
+					'width':'10%',
+					'height':'10%'
+				});
+
 				if (i%2) {
-					$div.css('background-color','white')
+					if (j%2) {
+						$div.css('background-color','white')
+					} else {
+						$div.css('background-color','grey')
+					}
 				} else {
-					$div.css('background-color','black')
+					if (j%2) {
+						$div.css('background-color','grey')
+					} else {
+						$div.css('background-color','white')
+					}
 				}
+				// $div.text(`${j}/${i}`)
 				$('#game-board').append($div)
-			};
+				const sqObj = new Square(i,j);
+				boardRow.push(sqObj)
+				const $icon1 = $(`<img src="${this.player1.icon}" class='icon' id="p1Icon" height="100%" width="100%">`)
+				const $icon2 = $(`<img src="${this.player2.icon}" class='icon' id="p1Icon" height="100%" width="100%">`)
+
+				if (i === 1 && j === 1) {
+					$div.append($icon1)
+					this.player1.currentPosition = $div
+				} else if (i === 10 && j === 10) {
+					$div.append($icon2)
+					this.player2.currentPosition = $div
+				}
+			}
+			this.board.push(boardRow);
+
+			// const $div = $('<div/>');
+			// $div.css({
+			// 	'width':'10%',
+			// 	'height':'10%'
+			// });
+			// if (i === 1) {
+			// 	const $icon = $(`<img src="${this.player1.icon}" id="p1Icon" height="100%" width="100%">`)
+			// 	$div.append($icon)
+			// } else if (i === 109) {
+			// 	const $icon = $(`<img src="${this.player2.icon}" id="p2Icon" height="100%" width="100%">`)
+			// 	$div.append($icon)
+			// }
+			// if (i%11 !== 0) {
+			// 	if (i%2) {
+			// 		$div.css('background-color','white')
+			// 	} else {
+			// 		$div.css('background-color','black')
+			// 	}
+			// 	$('#game-board').append($div)
+			// }
 		}
+	},
+
+	placeIcons(){
+		const $icon1 = $(`<img src="${this.player1.icon}" class='icon' id="p1Icon" height="100%" width="100%">`)
+		const $icon2 = $(`<img src="${this.player2.icon}" class='icon' id="p1Icon" height="100%" width="100%">`)
+		this.game.board.forEach((row, i) =>{
+			row.forEach((sq, j) =>{
+				if (sq.player === 1) {
+
+				}
+			})
+		})
 	},
 
 	startGame(){
@@ -87,7 +138,7 @@ $('#p1StartButton').on('click',game.makePlayer1)
 $('#p2Buttons').on('click',(e)=>{
 	console.log(e.target);
 	game.player2Class = $(e.target).attr('id');
-	console.log(game.player1Class);
+	console.log(game.player2Class);
 	$('button').css({
 		'background-color': 'white',
 		'color': 'black'
@@ -100,6 +151,12 @@ $('#p2Buttons').on('click',(e)=>{
 
 $('#p2StartButton').on('click',game.makePlayer2)
 
+
+$('.icon').on('click',(e)=>{
+	console.log(e);
+	console.log(e.target);
+	console.log($(e.target).data());
+})
 
 
 
@@ -124,4 +181,16 @@ $('#p2StartButton').on('click',game.makePlayer2)
 // $("#ArrB1").on('click',slider1)
 
 // $("#ArrB2").on('click',slider2)
+// [
+// 	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+// 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+// 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+// 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+// 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+// 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+// 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+// 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+// 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+// 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
 
+// ]

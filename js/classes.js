@@ -24,7 +24,22 @@ class Player {
 			this.icon = 'images/rogue-icon.png'
 		}
 
+		this.currentPosition = null;
 		this.moveUsed = false;
 		this.attackUsed = false;
+	}
+}
+
+class Square {
+	constructor(row, col){
+		this.row = row;
+		this.column = col;
+		if (row === 1 && col === 1) {
+			this.player = 1;
+		} else if (row === 10 && col === 10) {
+			this.player = 2;
+		} else {
+			this.player = 0;
+		}
 	}
 }
