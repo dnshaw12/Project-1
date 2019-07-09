@@ -4,6 +4,7 @@ body {
 	width: 100%;
 	margin: 0;
 	overflow-y: hidden;
+	font-family: 'Almendra', serif;
 }
 
 header {
@@ -22,6 +23,17 @@ main {
 	display: flex;
 	align-items: center;
 	justify-content: space-evenly;
+}
+
+footer {
+	position: fixed;
+	bottom: 0;
+	height: 5%;
+	font-size: 5vh;
+	color: rgb(218,165,32);
+	width: 100%;
+	text-align: center;
+	padding: 2vh;
 }
 
 #game-board {

@@ -28,6 +28,16 @@ class Player {
 		this.moveUsed = false;
 		this.attackUsed = false;
 	}
+
+	attack(e){
+		console.log(e);
+		if ($($(this).children()[0]).attr('class') === 'icon') {
+			game[`player${$($(this).children()[0]).attr('id')}`].HP -= game[`player${game.whichPlayer}`].damage;
+
+			game.printBoard();
+			game[`player${game.whichPlayer}`].attackUsed = true;
+		}
+	}
 }
 
 class Square {
