@@ -52,7 +52,7 @@ const game = {
 						$div.css('background-color','white')
 					}
 				}
-				// $div.text(`${j}/${i}`)
+				$div.text(`${j}/${i}`)
 				$('#game-board').append($div)
 				const sqObj = new Square(i,j);
 				boardRow.push(sqObj)
@@ -62,9 +62,29 @@ const game = {
 				if (i === 1 && j === 1) {
 					$div.append($icon1)
 					this.player1.currentPosition = $div
+					$div.on('click',(e) => {
+
+
+
+
+						console.log(e.currentTarget);
+
+
+
+
+					})
 				} else if (i === 10 && j === 10) {
 					$div.append($icon2)
 					this.player2.currentPosition = $div
+					$div.on('click',(e) => {
+
+
+
+						console.log(e.currentTarget);
+
+
+
+					})
 				}
 			}
 			this.board.push(boardRow);
@@ -92,14 +112,44 @@ const game = {
 		}
 	},
 
-	placeIcons(){
-		const $icon1 = $(`<img src="${this.player1.icon}" class='icon' id="p1Icon" height="100%" width="100%">`)
-		const $icon2 = $(`<img src="${this.player2.icon}" class='icon' id="p1Icon" height="100%" width="100%">`)
-		this.game.board.forEach((row, i) =>{
+	printBoard(){
+		$('#game-board').empty()
+		this.board.forEach((row, i) =>{
 			row.forEach((sq, j) =>{
-				if (sq.player === 1) {
+				const $div = $(`<div data-column-num="${j+1}" id="${j+1}-${i+1}" data-row-num="${i+1}"></div>`);
+				$div.css({
+					'width':'10%',
+					'height':'10%'
+				});
 
+				if (i%2) {
+					if (j%2) {
+						$div.css('background-color','white')
+					} else {
+						$div.css('background-color','grey')
+					}
+				} else {
+					if (j%2) {
+						$div.css('background-color','grey')
+					} else {
+						$div.css('background-color','white')
+					}
 				}
+				const $icon1 = $(`<img src="${this.player1.icon}" class='icon' id="p1Icon" height="100%" width="100%">`)
+				const $icon2 = $(`<img src="${this.player2.icon}" class='icon' id="p1Icon" height="100%" width="100%">`)
+
+				$div.text(`${j+1}/${i+1}`)
+				//re print the icons
+				if (sq.player === 1) {
+					console.log($div);
+					$div.append($icon1);
+					this.player1.currentPosition = $div
+				} else if (sq.player === 2) {
+					console.log(sq.player);
+					$div.append($icon2);
+					this.player2.currentPosition = $div
+				}
+				$('#game-board').append($div)
 			})
 		})
 	},
@@ -108,6 +158,7 @@ const game = {
 		this.makeBoard();
 		$('.p1Hidden').css('visibility','visible')
 		this.updateStats()
+		// this.printBoard();
 
 	},
 
