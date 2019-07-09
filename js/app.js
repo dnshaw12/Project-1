@@ -136,10 +136,24 @@ const game = {
 					console.log($div);
 					$div.append($icon1);
 					this.player1.currentPosition = $div
+					$div.on('click',(e) => {
+
+
+						this.highlightMoves(e.currentTarget);
+
+
+					})
 				} else if (sq.player === 2) {
 					console.log(sq.player);
 					$div.append($icon2);
 					this.player2.currentPosition = $div
+					$div.on('click',(e) => {
+
+
+						this.highlightMoves(e.currentTarget);
+
+
+					})
 				}
 				$('#game-board').append($div)
 			})
@@ -171,13 +185,17 @@ const game = {
 
 		const colNum = $(e).attr('data-column-num')
 		const rowNum = $(e).attr('data-row-num')
-		console.log(colNum);
-		console.log(rowNum);
+		
 		const board = $('#game-board').children()
-		console.log(curPlay.speed+parseInt(rowNum));
 
 		for (let i = 0; i < board.length; i++) {
-			if ($(board[i]).attr('data-column-num') === colNum && $(board[i]).attr('data-row-num') < parseInt(rowNum) + curPlay.speed && $(board[i]).attr('data-row-num') > parseInt(rowNum) || $(board[i]).attr('data-column-num') === colNum && $(board[i]).attr('data-row-num') > parseInt(rowNum) - curPlay.speed && $(board[i]).attr('data-row-num') < parseInt(rowNum) || $(board[i]).attr('data-row-num') === rowNum && $(board[i]).attr('data-column-num') < parseInt(colNum) + curPlay.speed && $(board[i]).attr('data-column-num') > parseInt(colNum) || $(board[i]).attr('data-row-num') === rowNum && $(board[i]).attr('data-column-num') > parseInt(colNum) - curPlay.speed && $(board[i]).attr('data-column-num') < parseInt(colNum)) {
+			if ($(board[i]).attr('data-column-num') === colNum && $(board[i]).attr('data-row-num') < parseInt(rowNum) + curPlay.speed && $(board[i]).attr('data-row-num') > parseInt(rowNum) || 
+
+				$(board[i]).attr('data-column-num') === colNum && $(board[i]).attr('data-row-num') > parseInt(rowNum) - curPlay.speed && $(board[i]).attr('data-row-num') < parseInt(rowNum) || 
+
+				$(board[i]).attr('data-row-num') === rowNum && $(board[i]).attr('data-column-num') < parseInt(colNum) + curPlay.speed && $(board[i]).attr('data-column-num') > parseInt(colNum) || 
+
+				$(board[i]).attr('data-row-num') === rowNum && $(board[i]).attr('data-column-num') > parseInt(colNum) - curPlay.speed && $(board[i]).attr('data-column-num') < parseInt(colNum)) {
 				$(board[i]).addClass('moveSpace')
 			}
 		}
@@ -186,11 +204,24 @@ const game = {
 		for (let i = 0; i < board.length; i++){
 			for (let j = curPlay.speed; j > 0; j--){
 
-				if ($(board[i]).attr('data-column-num') == parseInt(colNum) + j && $(board[i]).attr('data-row-num') < parseInt(rowNum) + curPlay.speed - j && $(board[i]).attr('data-row-num') > parseInt(rowNum) || $(board[i]).attr('data-column-num') == parseInt(colNum) - j && $(board[i]).attr('data-row-num') > parseInt(rowNum) - curPlay.speed + j && $(board[i]).attr('data-row-num') < parseInt(rowNum) || $(board[i]).attr('data-row-num') === rowNum + j && $(board[i]).attr('data-column-num') < parseInt(colNum) + curPlay.speed - j && $(board[i]).attr('data-column-num') > parseInt(colNum) || $(board[i]).attr('data-row-num') === rowNum - j && $(board[i]).attr('data-column-num') > parseInt(colNum) - curPlay.speed + j && $(board[i]).attr('data-column-num') < parseInt(colNum)) {
+				if ($(board[i]).attr('data-column-num') == parseInt(colNum) + j && $(board[i]).attr('data-row-num') < parseInt(rowNum) + curPlay.speed - j && $(board[i]).attr('data-row-num') > parseInt(rowNum) || 
+
+					$(board[i]).attr('data-column-num') == parseInt(colNum) - j && $(board[i]).attr('data-row-num') > parseInt(rowNum) - curPlay.speed + j && $(board[i]).attr('data-row-num') < parseInt(rowNum) ||
+
+					$(board[i]).attr('data-column-num') == parseInt(colNum) + j && $(board[i]).attr('data-row-num') > parseInt(rowNum) - curPlay.speed + j && $(board[i]).attr('data-row-num') < parseInt(rowNum) || 
+
+					$(board[i]).attr('data-column-num') == parseInt(colNum) - j && $(board[i]).attr('data-row-num') < parseInt(rowNum) + curPlay.speed - j && $(board[i]).attr('data-row-num') > parseInt(rowNum) 
+
+					) {
 					$(board[i]).addClass('moveSpace')
 				}
 			}
 		}
+		game.board[0][0].player = 0;
+
+		game.board[5][5].player = 1;
+
+
 
 	}
 }
@@ -235,8 +266,6 @@ $('.icon').on('click',(e)=>{
 	console.log(e.target);
 	console.log($(e.target).data());
 })
-
-
 
 // const slider1 = () => {
 // 	if ($('#player-one-stats').css('width') === '0px') {
