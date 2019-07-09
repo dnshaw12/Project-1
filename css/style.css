@@ -111,7 +111,15 @@ button {
 	animation: moveHighlight 2s infinite;
 }
 
+.attackSpace {
+	animation: attackHighlight 1s infinite;
+}
+
 @keyframes moveHighlight {
 	50% {background-color: yellow;}
+}
+
+@keyframes attackHighlight {
+	50% {background-color: red;}
 }
 

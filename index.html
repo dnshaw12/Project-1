@@ -10,13 +10,13 @@
 	<div class="stat-bar">
 		<div class="stats p1Hidden" id="player-one-stats">
 			<div>HP: <span id='p1HP'>0</span></div>
-			<button id="p1Attack">ATTACK</button>
+			<button class="attackButton">ATTACK</button>
 		</div>
 		<div class="arrow-button" id="ArrB1">></div>
 	</div>
 
 	<header>
-		<div id="turn-number">Turn 1</div>
+		<div>Turn <span id="turn-number">1</span></div>
 	</header>
 
 	<main>
@@ -47,9 +47,13 @@
 		<div class="arrow-button" id="ArrB2"><</div>
 		<div class="stats p2Hidden" id="player-two-stats">
 			<div>HP: <span id='p2HP'>0</span></div>
-			<button id="p2Attack">ATTACK</button>
+			<button class="attackButton">ATTACK</button>
 		</div>
 	</div>
+
+	<footer>
+		<div id="message-box"></div>
+	</footer>
 
 	<script type="text/javascript" src="js/classes.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
