@@ -4,7 +4,7 @@ const game = {
 	player2: null,
 	player2Class: null,
 	turn: 1,
-	whichPlayer: 1,
+	whichPlayer: 2,
 	board:[],
 
 	makePlayer1(){
@@ -52,12 +52,12 @@ const game = {
 						$div.css('background-color','white')
 					}
 				}
-				$div.text(`${j}/${i}`)
+				// $div.text(`${j}/${i}`)
 				$('#game-board').append($div)
 				const sqObj = new Square(i,j);
 				boardRow.push(sqObj)
-				const $icon1 = $(`<img src="${this.player1.icon}" class='icon' id="p1Icon" height="100%" width="100%">`)
-				const $icon2 = $(`<img src="${this.player2.icon}" class='icon' id="p1Icon" height="100%" width="100%">`)
+				const $icon1 = $(`<img src="${this.player1.icon}" class='icon' id=1 height="100%" width="100%">`)
+				const $icon2 = $(`<img src="${this.player2.icon}" class='icon' id=2 height="100%" width="100%">`)
 
 				if (i === 1 && j === 1) {
 					$div.append($icon1)
@@ -80,27 +80,6 @@ const game = {
 				}
 			}
 			this.board.push(boardRow);
-
-			// const $div = $('<div/>');
-			// $div.css({
-			// 	'width':'10%',
-			// 	'height':'10%'
-			// });
-			// if (i === 1) {
-			// 	const $icon = $(`<img src="${this.player1.icon}" id="p1Icon" height="100%" width="100%">`)
-			// 	$div.append($icon)
-			// } else if (i === 109) {
-			// 	const $icon = $(`<img src="${this.player2.icon}" id="p2Icon" height="100%" width="100%">`)
-			// 	$div.append($icon)
-			// }
-			// if (i%11 !== 0) {
-			// 	if (i%2) {
-			// 		$div.css('background-color','white')
-			// 	} else {
-			// 		$div.css('background-color','black')
-			// 	}
-			// 	$('#game-board').append($div)
-			// }
 		}
 	},
 
@@ -127,10 +106,10 @@ const game = {
 						$div.css('background-color','white')
 					}
 				}
-				const $icon1 = $(`<img src="${this.player1.icon}" class='icon' id="p1Icon" height="100%" width="100%">`)
-				const $icon2 = $(`<img src="${this.player2.icon}" class='icon' id="p1Icon" height="100%" width="100%">`)
+				const $icon1 = $(`<img src="${this.player1.icon}" class='icon' id=1 height="100%" width="100%">`)
+				const $icon2 = $(`<img src="${this.player2.icon}" class='icon' id=2 height="100%" width="100%">`)
 
-				$div.text(`${j+1}/${i+1}`)
+				// $div.text(`${j+1}/${i+1}`)
 				//re print the icons
 				if (sq.player === 1) {
 					console.log($div);
@@ -177,52 +156,72 @@ const game = {
 		console.log(this);
 		let curPlay;
 
-		if (whichPlayer = 1) {
+		if (this.whichPlayer === 1) {
 			curPlay = this.player1
 		} else {
 			curPlay = this.player2
 		}
 
-		const colNum = $(e).attr('data-column-num')
-		const rowNum = $(e).attr('data-row-num')
-		
-		const board = $('#game-board').children()
+		console.log($($(e).children()[0]).attr('id'));
+		console.log(this.whichPlayer);
 
-		for (let i = 0; i < board.length; i++) {
-			if ($(board[i]).attr('data-column-num') === colNum && $(board[i]).attr('data-row-num') < parseInt(rowNum) + curPlay.speed && $(board[i]).attr('data-row-num') > parseInt(rowNum) || 
+		if ($($(e).children()[0]).attr('id') != this.whichPlayer) {
+			alert('You cannot move the opponents piece')
+		} else {
+			const colNum = $(e).attr('data-column-num')
+			const rowNum = $(e).attr('data-row-num')
+			
+			const board = $('#game-board').children()
 
-				$(board[i]).attr('data-column-num') === colNum && $(board[i]).attr('data-row-num') > parseInt(rowNum) - curPlay.speed && $(board[i]).attr('data-row-num') < parseInt(rowNum) || 
+			for (let i = 0; i < board.length; i++) {
+				if ($(board[i]).attr('data-column-num') === colNum && $(board[i]).attr('data-row-num') < parseInt(rowNum) + curPlay.speed && $(board[i]).attr('data-row-num') > parseInt(rowNum) || 
 
-				$(board[i]).attr('data-row-num') === rowNum && $(board[i]).attr('data-column-num') < parseInt(colNum) + curPlay.speed && $(board[i]).attr('data-column-num') > parseInt(colNum) || 
+					$(board[i]).attr('data-column-num') === colNum && $(board[i]).attr('data-row-num') > parseInt(rowNum) - curPlay.speed && $(board[i]).attr('data-row-num') < parseInt(rowNum) || 
 
-				$(board[i]).attr('data-row-num') === rowNum && $(board[i]).attr('data-column-num') > parseInt(colNum) - curPlay.speed && $(board[i]).attr('data-column-num') < parseInt(colNum)) {
-				$(board[i]).addClass('moveSpace')
-			}
-		}
+					$(board[i]).attr('data-row-num') === rowNum && $(board[i]).attr('data-column-num') < parseInt(colNum) + curPlay.speed && $(board[i]).attr('data-column-num') > parseInt(colNum) || 
 
-		
-		for (let i = 0; i < board.length; i++){
-			for (let j = curPlay.speed; j > 0; j--){
-
-				if ($(board[i]).attr('data-column-num') == parseInt(colNum) + j && $(board[i]).attr('data-row-num') < parseInt(rowNum) + curPlay.speed - j && $(board[i]).attr('data-row-num') > parseInt(rowNum) || 
-
-					$(board[i]).attr('data-column-num') == parseInt(colNum) - j && $(board[i]).attr('data-row-num') > parseInt(rowNum) - curPlay.speed + j && $(board[i]).attr('data-row-num') < parseInt(rowNum) ||
-
-					$(board[i]).attr('data-column-num') == parseInt(colNum) + j && $(board[i]).attr('data-row-num') > parseInt(rowNum) - curPlay.speed + j && $(board[i]).attr('data-row-num') < parseInt(rowNum) || 
-
-					$(board[i]).attr('data-column-num') == parseInt(colNum) - j && $(board[i]).attr('data-row-num') < parseInt(rowNum) + curPlay.speed - j && $(board[i]).attr('data-row-num') > parseInt(rowNum) 
-
-					) {
+					$(board[i]).attr('data-row-num') === rowNum && $(board[i]).attr('data-column-num') > parseInt(colNum) - curPlay.speed && $(board[i]).attr('data-column-num') < parseInt(colNum)) {
 					$(board[i]).addClass('moveSpace')
+					$(board[i]).on('click',this.moveIcon)
+				}
+			}
+
+			
+			for (let i = 0; i < board.length; i++){
+				for (let j = curPlay.speed; j > 0; j--){
+
+					if ($(board[i]).attr('data-column-num') == parseInt(colNum) + j && $(board[i]).attr('data-row-num') < parseInt(rowNum) + curPlay.speed - j && $(board[i]).attr('data-row-num') > parseInt(rowNum) || 
+
+						$(board[i]).attr('data-column-num') == parseInt(colNum) - j && $(board[i]).attr('data-row-num') > parseInt(rowNum) - curPlay.speed + j && $(board[i]).attr('data-row-num') < parseInt(rowNum) ||
+
+						$(board[i]).attr('data-column-num') == parseInt(colNum) + j && $(board[i]).attr('data-row-num') > parseInt(rowNum) - curPlay.speed + j && $(board[i]).attr('data-row-num') < parseInt(rowNum) || 
+
+						$(board[i]).attr('data-column-num') == parseInt(colNum) - j && $(board[i]).attr('data-row-num') < parseInt(rowNum) + curPlay.speed - j && $(board[i]).attr('data-row-num') > parseInt(rowNum) ) {
+						$(board[i]).addClass('moveSpace');
+						$(board[i]).on('click',this.moveIcon)
+
+					}
 				}
 			}
 		}
-		game.board[0][0].player = 0;
 
-		game.board[5][5].player = 1;
+	},
 
-
-
+	moveIcon(e){
+		
+		game.board.forEach((row) => {
+			row.forEach((sq) => {
+				if (sq.player == game.whichPlayer) {
+						sq.player = 0;
+				}
+				if ($(e.target).attr('id') == sq.id) {
+					sq.player = game.whichPlayer;
+					console.log(game.whichPlayer);
+					console.log(sq);
+				}
+			})
+		})
+		game.printBoard()
 	}
 }
 

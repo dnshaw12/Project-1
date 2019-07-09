@@ -32,6 +32,7 @@ class Player {
 
 class Square {
 	constructor(row, col){
+		this.id = `${col}-${row}`;
 		this.row = row;
 		this.column = col;
 		if (row === 1 && col === 1) {
