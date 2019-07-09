@@ -119,6 +119,10 @@ button {
 	color: black;
 }
 
+.icon {
+	z-index: 2;
+}
+
 .moveSpace {
 	animation: moveHighlight 2s infinite;
 }

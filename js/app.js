@@ -4,6 +4,7 @@ const game = {
 	player2: null,
 	player2Class: null,
 	turn: 1,
+	totalPlayers: 2,
 	whichPlayer: 1,
 	board:[],
 
@@ -222,6 +223,7 @@ const game = {
 		})
 		game[`player${game.whichPlayer}`].moveUsed = true;
 		game.printBoard()
+		game.checkTurnEnding()
 	},
 
 	highlightAttacks(){
@@ -270,7 +272,17 @@ const game = {
 		
 	},
 
-
+	checkTurnEnding(){
+		const curPlay = game[`player${game.whichPlayer}`];
+		if (curPlay.moveUsed === true && curPlay. attackUsed === true) {
+			if (this.whichPlayer !== this.totalPlayers) {
+				this.whichPlayer++;
+			} else {
+				this.whichPlayer = 1;
+			}
+			console.log(`it is now player${game.whichPlayer} turn!`);
+		}
+	}
 }
 
 $('#p1Buttons').on('click',(e)=>{

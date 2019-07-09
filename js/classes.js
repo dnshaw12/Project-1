@@ -34,8 +34,9 @@ class Player {
 		if ($($(this).children()[0]).attr('class') === 'icon') {
 			game[`player${$($(this).children()[0]).attr('id')}`].HP -= game[`player${game.whichPlayer}`].damage;
 
-			game.printBoard();
 			game[`player${game.whichPlayer}`].attackUsed = true;
+			game.printBoard();
+			game.checkTurnEnding()
 		}
 	}
 }
