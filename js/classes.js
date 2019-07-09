@@ -12,13 +12,13 @@ class Player {
 		if(playerType === 'wizard'){
 			this.HP = 15;
 			this.speed = 3;
-			this.damage = 4;
+			this.damage = 6;
 			this.range = 4;
 			this.icon = 'images/wiz-icon.png'
 		}
 		if(playerType === 'rogue'){
 			this.HP = 12;
-			this.speed = 6;
+			this.speed = 5;
 			this.damage = 4;
 			this.range = 1;
 			this.icon = 'images/rogue-icon.png'
@@ -27,6 +27,7 @@ class Player {
 		this.currentPosition = null;
 		this.moveUsed = false;
 		this.attackUsed = false;
+		this.isAlive = true;
 	}
 
 	attack(e){

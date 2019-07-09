@@ -143,13 +143,14 @@ const game = {
 
 	startGame(){
 		this.makeBoard();
-		$('.p1Hidden').css('visibility','visible')
 		this.updateStats()
-		// this.printBoard();
 
 	},
 
 	updateStats(){
+		$(`.stats`).css('visibility','hidden')
+		$(`.p${this.whichPlayer}Hidden`).css('visibility','visible')
+		console.log(`.p${this.whichPlayer}Hidden`);
 		$('#p1HP').text(this.player1.HP)
 		$('#p2HP').text(this.player2.HP)
 	},
@@ -280,7 +281,28 @@ const game = {
 			} else {
 				this.whichPlayer = 1;
 			}
+			curPlay.moveUsed = false;
+			curPlay.attackUsed = false;
 			console.log(`it is now player${game.whichPlayer} turn!`);
+			$(`.p${game.whichPlayer}Hidden`).css('visibility','visible')
+			this.updateStats()
+			this.printBoard()
+		}
+	},
+
+	passTurn(){
+		const curPlay = game[`player${game.whichPlayer}`];
+		curPlay.moveUsed = true;
+		curPlay.attackUsed = true;
+		game.checkTurnEnding();
+	},
+
+	checkForWin(){
+		for (let i = 1; i <= this.totalPlayers; i++){
+			const player = this[`player${i}`]
+			if (player.HP <= 0) {
+				player.isAlive = false;
+			}
 		}
 	}
 }
@@ -329,39 +351,6 @@ $('.attackButton').on('click',() =>{
 	game.highlightAttacks()
 })
 
-// const slider1 = () => {
-// 	if ($('#player-one-stats').css('width') === '0px') {
-// 		$('#player-one-stats').css('width','100%')
-// 	} else {
-// 		$('#player-one-stats').css('width','0%')
-// 	}
-// 	console.log($('#player-one-stats').css('width'));
-// }
-
-// const slider2 = () => {
-// 	if ($('#player-two-stats').css('width') === '0px') {
-// 		$('#player-two-stats').css('width','100%')
-// 	} else {
-// 		$('#player-two-stats').css('width','0%')
-// 	}
-// 	console.log($('#player-two-stats').css('width'));
-// }
-
-// $("#ArrB1").on('click',slider1)
-
-// $("#ArrB2").on('click',slider2)
-// [
-// 	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-// 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-// 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-// 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-// 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-// 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-// 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-// 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-// 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-// 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-
-// ]
+$('.passButton').on('click',game.passTurn)
 
 
