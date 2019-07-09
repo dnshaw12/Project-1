@@ -65,11 +65,7 @@ const game = {
 					$div.on('click',(e) => {
 
 
-
-
-						console.log(e.currentTarget);
-
-
+						this.highlightMoves(e.currentTarget);
 
 
 					})
@@ -78,11 +74,7 @@ const game = {
 					this.player2.currentPosition = $div
 					$div.on('click',(e) => {
 
-
-
-						console.log(e.currentTarget);
-
-
+						this.highlightMoves(e.currentTarget);
 
 					})
 				}
@@ -165,6 +157,42 @@ const game = {
 	updateStats(){
 		$('#p1HP').text(this.player1.HP)
 		$('#p2HP').text(this.player2.HP)
+	},
+
+	highlightMoves(e){
+		console.log(this);
+		let curPlay;
+
+		if (whichPlayer = 1) {
+			curPlay = this.player1
+		} else {
+			curPlay = this.player2
+		}
+
+		const colNum = $(e).attr('data-column-num')
+		const rowNum = $(e).attr('data-row-num')
+		console.log(colNum);
+		console.log(rowNum);
+		const board = $('#game-board').children()
+		console.log(curPlay.speed+parseInt(rowNum));
+
+		for (let i = 0; i < board.length; i++) {
+			if ($(board[i]).attr('data-column-num') === colNum && $(board[i]).attr('data-row-num') < parseInt(rowNum) + curPlay.speed && $(board[i]).attr('data-row-num') > parseInt(rowNum) || $(board[i]).attr('data-column-num') === colNum && $(board[i]).attr('data-row-num') > parseInt(rowNum) - curPlay.speed && $(board[i]).attr('data-row-num') < parseInt(rowNum) || $(board[i]).attr('data-row-num') === rowNum && $(board[i]).attr('data-column-num') < parseInt(colNum) + curPlay.speed && $(board[i]).attr('data-column-num') > parseInt(colNum) || $(board[i]).attr('data-row-num') === rowNum && $(board[i]).attr('data-column-num') > parseInt(colNum) - curPlay.speed && $(board[i]).attr('data-column-num') < parseInt(colNum)) {
+				$(board[i]).css('background-color','yellow')
+			}
+		}
+
+		
+		for (let i = 0; i < board.length; i++){
+			for (let j = curPlay.speed; j > 0; j--){
+
+				if ($(board[i]).attr('data-column-num') == parseInt(colNum) + j && $(board[i]).attr('data-row-num') < parseInt(rowNum) + curPlay.speed - j && $(board[i]).attr('data-row-num') > parseInt(rowNum) || $(board[i]).attr('data-column-num') == parseInt(colNum) - j && $(board[i]).attr('data-row-num') > parseInt(rowNum) - curPlay.speed + j && $(board[i]).attr('data-row-num') < parseInt(rowNum) || $(board[i]).attr('data-row-num') === rowNum + j && $(board[i]).attr('data-column-num') < parseInt(colNum) + curPlay.speed - j && $(board[i]).attr('data-column-num') > parseInt(colNum) || $(board[i]).attr('data-row-num') === rowNum - j && $(board[i]).attr('data-column-num') > parseInt(colNum) - curPlay.speed + j && $(board[i]).attr('data-column-num') < parseInt(colNum)) {
+					$(board[i]).css('background-color','yellow')
+			}
+
+			}
+		}
+
 	}
 }
 
