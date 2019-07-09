@@ -131,8 +131,16 @@ button {
 	animation: attackHighlight 1s infinite;
 }
 
+.messageAnimate {
+	animation: messageAnimate 1.5s linear 0s 4;
+}
+
 @keyframes moveHighlight {
 	50% {background-color: yellow;}
+}
+
+@keyframes messageAnimate {
+	50% {color: rgb(56, 2, 2);}
 }
 
 @keyframes attackHighlight {

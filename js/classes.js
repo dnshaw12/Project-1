@@ -38,6 +38,7 @@ class Player {
 			game[`player${game.whichPlayer}`].attackUsed = true;
 			game.printBoard();
 			game.checkTurnEnding()
+			game.checkForWin()
 		}
 	}
 }

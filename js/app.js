@@ -9,10 +9,9 @@ const game = {
 	board:[],
 
 	makePlayer1(){
-		console.log(this);
 		if ($('#p1Input').val() === '' || game.player1Class === null) {
-			alert('Please input your name and choose a class!')
-			console.log($('#p1Input').val());
+			$('#message-box').text('Please input your name and choose a class!')
+			game.animateMessage();
 		} else {
 			game.player1 = new Player($('#p1Input').val(),game.player1Class)
 			$('#p1StartScreen').remove()
@@ -21,7 +20,8 @@ const game = {
 
 	makePlayer2(){
 		if ($('#p2Input').val() === '' || game.player2Class === null) {
-			alert('Please input your name and choose a class!')
+			$('#message-box').text('Please input your name and choose a class!')
+			this.animateMessage();
 			console.log($('#p2Input').val());
 		} else {
 			game.player2 = new Player($('#p2Input').val(),game.player2Class)
@@ -150,7 +150,7 @@ const game = {
 	updateStats(){
 		$(`.stats`).css('visibility','hidden')
 		$(`.p${this.whichPlayer}Hidden`).css('visibility','visible')
-		console.log(`.p${this.whichPlayer}Hidden`);
+		$('#turn-number').text(this.turn)
 		$('#p1HP').text(this.player1.HP)
 		$('#p2HP').text(this.player2.HP)
 	},
@@ -163,7 +163,8 @@ const game = {
 		if ($($(e).children()[0]).attr('id') == this.whichPlayer) {
 
 			if (curPlay.moveUsed === true) {
-				alert('you already moved this turn!')
+				$('#message-box').text('You already moved this turn!')
+				this.animateMessage();
 			} else{
 				this.printBoard()
 				const colNum = $(e).attr('data-column-num')
@@ -224,6 +225,7 @@ const game = {
 		})
 		game[`player${game.whichPlayer}`].moveUsed = true;
 		game.printBoard()
+		game.checkForWin()
 		game.checkTurnEnding()
 	},
 
@@ -236,7 +238,8 @@ const game = {
 		const rowNum = $(curPlay.currentPosition).attr('data-row-num')
 
 		if (curPlay.attackUsed === true) {
-			alert('you already attacked this turn!')
+			$('#message-box').text('You already attacked this turn!')
+			game.animateMessage();
 		} else {
 			for (let i = 0; i < board.length; i++) {
 				if ($(board[i]).attr('data-row-num') === rowNum && $(board[i]).attr('data-column-num') <= parseInt(colNum) + curPlay.range && $(board[i]).attr('data-column-num') > parseInt(colNum) || 
@@ -280,6 +283,7 @@ const game = {
 				this.whichPlayer++;
 			} else {
 				this.whichPlayer = 1;
+				this.turn++;
 			}
 			curPlay.moveUsed = false;
 			curPlay.attackUsed = false;
@@ -298,12 +302,39 @@ const game = {
 	},
 
 	checkForWin(){
+		let totalDead = 0;
+		let winner;
 		for (let i = 1; i <= this.totalPlayers; i++){
 			const player = this[`player${i}`]
-			if (player.HP <= 0) {
+			if (player.HP <= 0 && player.isAlive === true) {
 				player.isAlive = false;
+				totalDead++;
+			}	
+		}
+		if (totalDead === this.totalPlayers - 1) {	
+			for (let i = 1; i <= this.totalPlayers; i++){
+				const player = this[`player${i}`]
+				if (player.isAlive === true) {
+					winner = player;
+				}
 			}
 		}
+		if (winner !== undefined) {
+			console.log(`${winner.name} Wins!!!`);
+		}
+	},
+
+	animateMessage(){
+		$('#message-box').addClass('messageAnimate')
+		let time = 0;
+		const timer = setInterval(()=>{
+			console.log(time);
+			time++;
+			if (time === 6) {
+				$('#message-box').removeClass('messageAnimate')
+				clearInterval(timer)
+			}
+		},1000)
 	}
 }
 
@@ -352,5 +383,10 @@ $('.attackButton').on('click',() =>{
 })
 
 $('.passButton').on('click',game.passTurn)
+
+// $('#message-box').on('change',()=>{
+// 	$('#message-box').addClass('messageAnimate')
+// 	$('#message-box').removeClass('messageAnimate')
+// })
 
 
