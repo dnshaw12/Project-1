@@ -107,4 +107,11 @@ button {
 	color: black;
 }
 
+.moveSpace {
+	animation: moveHighlight 2s infinite;
+}
+
+@keyframes moveHighlight {
+	50% {background-color: yellow;}
+}
 

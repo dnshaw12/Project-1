@@ -178,7 +178,7 @@ const game = {
 
 		for (let i = 0; i < board.length; i++) {
 			if ($(board[i]).attr('data-column-num') === colNum && $(board[i]).attr('data-row-num') < parseInt(rowNum) + curPlay.speed && $(board[i]).attr('data-row-num') > parseInt(rowNum) || $(board[i]).attr('data-column-num') === colNum && $(board[i]).attr('data-row-num') > parseInt(rowNum) - curPlay.speed && $(board[i]).attr('data-row-num') < parseInt(rowNum) || $(board[i]).attr('data-row-num') === rowNum && $(board[i]).attr('data-column-num') < parseInt(colNum) + curPlay.speed && $(board[i]).attr('data-column-num') > parseInt(colNum) || $(board[i]).attr('data-row-num') === rowNum && $(board[i]).attr('data-column-num') > parseInt(colNum) - curPlay.speed && $(board[i]).attr('data-column-num') < parseInt(colNum)) {
-				$(board[i]).css('background-color','yellow')
+				$(board[i]).addClass('moveSpace')
 			}
 		}
 
@@ -187,9 +187,8 @@ const game = {
 			for (let j = curPlay.speed; j > 0; j--){
 
 				if ($(board[i]).attr('data-column-num') == parseInt(colNum) + j && $(board[i]).attr('data-row-num') < parseInt(rowNum) + curPlay.speed - j && $(board[i]).attr('data-row-num') > parseInt(rowNum) || $(board[i]).attr('data-column-num') == parseInt(colNum) - j && $(board[i]).attr('data-row-num') > parseInt(rowNum) - curPlay.speed + j && $(board[i]).attr('data-row-num') < parseInt(rowNum) || $(board[i]).attr('data-row-num') === rowNum + j && $(board[i]).attr('data-column-num') < parseInt(colNum) + curPlay.speed - j && $(board[i]).attr('data-column-num') > parseInt(colNum) || $(board[i]).attr('data-row-num') === rowNum - j && $(board[i]).attr('data-column-num') > parseInt(colNum) - curPlay.speed + j && $(board[i]).attr('data-column-num') < parseInt(colNum)) {
-					$(board[i]).css('background-color','yellow')
-			}
-
+					$(board[i]).addClass('moveSpace')
+				}
 			}
 		}
 
