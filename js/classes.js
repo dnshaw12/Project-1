@@ -44,9 +44,10 @@ class Player {
 
 			if (game[`player${$($(this).children()[0]).attr('id')}`].HP - game[`player${game.whichPlayer}`].damage < 0) {
 
-				game[`player${$($(this).children()[0]).attr('id')}`].HP = 0
+				game[`player${$($(this).children()[0]).attr('id')}`].HP = 0;
 			} else {
 				game[`player${$($(this).children()[0]).attr('id')}`].HP -= game[`player${game.whichPlayer}`].damage;
+				game.lastTurnDamage = game[`player${game.whichPlayer}`].damage;
 			}
 
 			const board = $('#game-board').children()
@@ -305,7 +306,6 @@ class Player {
 				}
 			})
 		})
-		game.enableStatBar()
 		game[`player${game.whichPlayer}`].moveUsed = true;
 		game.printBoard()
 		game.checkForWin()

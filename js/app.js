@@ -7,6 +7,7 @@ const game = {
 	totalPlayers: 2,
 	whichPlayer: 1,
 	buttonsActive: true,
+	lastTurnDamage: 0,
 	board:[],
 
 	makePlayer1(){
@@ -276,22 +277,47 @@ const game = {
 		const curPlay = game[`player${game.whichPlayer}`];
 		if (curPlay.moveUsed === true && curPlay. attackUsed === true) {
 			if (this.whichPlayer !== this.totalPlayers) {
+				$(`.p${game.whichPlayer}Hidden`).css('visibility','hidden')
 				this.whichPlayer++;
 			} else {
+				$(`.p${game.whichPlayer}Hidden`).css('visibility','hidden')
 				this.whichPlayer = 1;
 				this.turn++;
 			}
+			this.buttonsActive = false;
 			curPlay.moveUsed = false;
 			curPlay.attackUsed = false;
 
 			// add player switch screen
+			const $div = $(`<div></div>`)
+			const $button = $(`<button id="start-turn">Take Turn</button>`)
+			$div.addClass('turnSwitch')
+			$p = $(`<p>Turn ${this.turn}: It's ${curPlay.name} the ${curPlay.class}'s turn!</p>`)
+			$p2 = $(`<p>You took ${this.lastTurnDamage} damage!</p>`)
+			$p.css({
+				'color': 'black',
+				'text-align': 'center',
+				'font-size': '5vh',
+
+			})
+			$button.on('click',()=>{
+				$('.turnSwitch').remove()
+				game.printBoard()
+				game.buttonsActive = true;
+				$(`.p${game.whichPlayer}Hidden`).css('visibility','visible')
+				this.updateStats()
+			})
+			$div.append($p);
+			$div.append($p2)
+			$div.append($button);
+			$('#game-board').empty();
+			$('#game-board').append($div);
 
 
 			// console.log(`it is now player${game.whichPlayer} turn!`);
-			$(`.p${game.whichPlayer}Hidden`).css('visibility','visible')
+			
 			$('#message-box').text('')
-			this.updateStats()
-			this.printBoard()
+			this.lastTurnDamage = 0;
 		}
 	},
 
@@ -323,7 +349,7 @@ const game = {
 		}
 		if (winner !== undefined) {
 			$(`.stats`).css('visibility','visible')
-			$(`button`).css('visibility','hidden')
+			this.buttonsActive = false;
 			const $div = $(`<div></div>`)
 			$div.addClass('endScreen')
 			$p = $(`<p>${winner.name} the ${winner.class} Wins!</p>`)
@@ -337,14 +363,6 @@ const game = {
 			$('#game-board').empty();
 			$('#game-board').append($div);
 		}
-	},
-
-	disableStatBar(){
-		$('.stat-shield').css('visibility','visible')
-	},
-
-	enableStatBar(){
-		$('.stat-shield').css('visibility','hidden')
 	},
 
 	animateMessage(){
@@ -364,12 +382,10 @@ const game = {
 $('#p1Buttons').on('click',(e)=>{
 	game.player1Class = $(e.target).attr('id');
 	$('button').css({
-		'background-color': 'white',
 		'color': 'black'
 	})
 	$(e.target).css({
-		'background-color': 'black',
-		'color': 'white'
+		'color': 'rgb(218,165,32)'
 	})
 })
 
@@ -380,12 +396,10 @@ $('#p2Buttons').on('click',(e)=>{
 	game.player2Class = $(e.target).attr('id');
 	// console.log(game.player2Class);
 	$('button').css({
-		'background-color': 'white',
 		'color': 'black'
 	})
 	$(e.target).css({
-		'background-color': 'black',
-		'color': 'white'
+		'color': 'rgb(218,165,32)'
 	})
 })
 
