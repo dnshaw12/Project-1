@@ -58,7 +58,7 @@ footer {
 
 #overlay {
 	position: absolute;
-	background-color: rgba(100,100,100, 0.5);
+	/*background-color: rgba(100,100,100, 0.5);*/
 	top: 0px;
 	left: 0px;
 	width: 80vh;

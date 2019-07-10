@@ -4,16 +4,17 @@ class Player {
 
 		if(playerType === 'fighter') {
 			this.class = 'Fighter';
-			this.HP = 1;
+			this.HP = 18;
 			this.speed = 4;
 			this.damage = 5;
 			this.range = 1;
 			this.icon = 'images/fighter-icon.png'
+			this.pow = 'images/pow.png'
 		}
 		if(playerType === 'wizard'){
 			this.class = 'Wizard';
-			this.HP = 100;
-			this.speed = 10;
+			this.HP = 15;
+			this.speed = 3;
 			this.damage = 5;
 			this.range = 40;
 			this.icon = 'images/wiz-icon.png'
@@ -23,10 +24,11 @@ class Player {
 		if(playerType === 'rogue'){
 			this.class = 'Rogue';
 			this.HP = 12;
-			this.speed = 5;
+			this.speed = 50;
 			this.damage = 4;
-			this.range = 1;
-			this.icon = 'images/rogue-icon.png'
+			this.range = 100;
+			this.icon = 'images/rogue-icon.png';
+			this.blood = 'images/blood.png'
 		}
 
 		this.currentPosition = null;
@@ -36,6 +38,7 @@ class Player {
 	}
 
 	attack(e){
+		game.printBoard()
 		if ($($(this).children()[0]).attr('class') === 'icon') {
 
 			if (game[`player${$($(this).children()[0]).attr('id')}`].HP - game[`player${game.whichPlayer}`].damage < 0) {
@@ -116,7 +119,7 @@ class Player {
 				$fireball.animate({
 					'margin-top': enemyTop,
 					'margin-left': enemyLeft,
-				}, 1500, function(){
+				}, 1500,'easeInQuint', function(){
 					$fireball.attr('src',curPlay.fire)
 					$fireball.css('transform','rotate(0deg)')
 					$fireball.animate({
@@ -124,17 +127,136 @@ class Player {
 					},2000, function(){
 						$('#overlay').css('visibility','hidden');
 						$('#overlay').empty();
+						game.printBoard();
+						game.checkTurnEnding()
+						game.checkForWin()
 					})
 				})
 
 
+			} else if (curPlay.class === 'Fighter') {
+				console.log('fighter animation');
+				let fighterIcon;
+				for (let i = 0; i < board.length; i++){
+					if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
+						fighterIcon = $($(board[i]).children()[0]);
+					}
+				}
+
+				const $shield = $(`<img/>`)
+
+				$shield.attr('src',curPlay.icon)
+				console.log(curPlay.icon);
+				$shield.css({
+					'width': '10%',
+					'height': '10%',
+					'margin-top': currentTop,
+					'margin-left': currentLeft,
+					'transform':`rotate(${degrees - 90}deg)`
+				})
+
+				$('#overlay').css('visibility','visible');
+
+				$('#overlay').append($shield)
+
+				
+				fighterIcon.hide()
+
+				$shield.animate({
+					'margin-top': enemyTop,
+					'margin-left': enemyLeft,
+				}, 750, 'easeInElastic', function(){
+					$shield.css({
+						'transform':`rotate(0deg)`
+					})
+					$shield.attr('src',curPlay.pow)
+					$shield.animate({
+						'width': '10%',
+						'height': '10%',
+					},400, function(){
+						$shield.attr('src',curPlay.icon)
+						$shield.css({
+							'transform':`rotate(${degrees - 90}deg)`
+						})
+						$shield.animate({
+							'margin-top': currentTop,
+							'margin-left': currentLeft,
+							'rotate':`0deg`
+						},1000,'swing', function(){
+							fighterIcon.show()
+							$('#overlay').css('visibility','hidden');
+							$('#overlay').empty();
+							game.printBoard();
+							game.checkTurnEnding()
+							game.checkForWin()							
+						})	
+					})
+				})
+				
+			} else if (curPlay.class === 'Rogue') {
+				let rogueIcon;
+				for (let i = 0; i < board.length; i++){
+					if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
+						rogueIcon = $($(board[i]).children()[0]);
+					}
+				}
+
+				const $knife = $(`<img/>`)
+
+				$knife.attr('src',curPlay.icon)
+				$knife.css({
+					'width': '10%',
+					'height': '10%',
+					'margin-top': currentTop,
+					'margin-left': currentLeft,
+					'transform':`rotate(${degrees+225}deg)`,
+					'position': 'absolute'
+				})
+
+
+				const $blood = $(`<img/>`)
+
+				$blood.attr('src',curPlay.blood)
+				$blood.css({
+					'width': '10%',
+					'height': '10%',
+					'margin-top': enemyTop,
+					'margin-left': enemyLeft,
+					'z-index': '20',
+					'position': 'absolute'
+				})
+
+				$('#overlay').css('visibility','visible');
+
+				$('#overlay').append($knife)
+
+				rogueIcon.hide()
+
+				$knife.animate({
+					'margin-top': enemyTop,
+					'margin-left': enemyLeft,
+				},500,'easeInBack',function(){
+					$('#overlay').append($blood)
+					$blood.animate({'opacity': '0'},2000,'easeInCubic')
+					$knife.animate({
+						'margin-top': currentTop,
+						'margin-left': currentLeft,
+					},2000,function(){
+						rogueIcon.show()
+						$('#overlay').css('visibility','hidden');
+						$('#overlay').empty();
+						game.printBoard();
+						game.checkTurnEnding()
+						game.checkForWin()
+					})
+				})
 			}
 
 
 			game[`player${game.whichPlayer}`].attackUsed = true;
-			game.printBoard();
-			game.checkTurnEnding()
-			game.checkForWin()
+			// game.printBoard();
+			// game.checkTurnEnding()
+			// game.checkForWin()
 		}
 	}
 
