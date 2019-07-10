@@ -277,25 +277,30 @@ const game = {
 
 	checkTurnEnding(){
 		const curPlay = game[`player${game.whichPlayer}`];
-		if (curPlay.moveUsed === true && curPlay. attackUsed === true) {
+		if (curPlay.moveUsed === true && curPlay.attackUsed === true) {
+
 			$(`.p${game.whichPlayer}Hidden`).css('visibility','hidden')
+
 			if (this.whichPlayer !== this.totalPlayers) {
 				this.whichPlayer++;
 			} else {
 				this.whichPlayer = 1;
 				this.turn++;
 			}
+			console.log(this.whichPlayer);
 			this.buttonsActive = false;
 			curPlay.moveUsed = false;
 			curPlay.attackUsed = false;
 			$('#game-board').css({'box-shadow': '0px 0px 0px black'})
 
-			// add player switch screen
+			const nextPlayer = game[`player${game.whichPlayer}`]
+
+			const $p = $(`<p>Turn ${this.turn}: It's ${nextPlayer.name} the ${nextPlayer.class}'s turn!</p>`)
+			const $p2 = $(`<p>You took ${this.lastTurnDamage} damage!</p>`)
+
 			const $div = $(`<div></div>`)
 			const $button = $(`<button id="start-turn">Take Turn</button>`)
 			$div.addClass('turnSwitch')
-			$p = $(`<p>Turn ${this.turn}: It's ${curPlay.name} the ${curPlay.class}'s turn!</p>`)
-			$p2 = $(`<p>You took ${this.lastTurnDamage} damage!</p>`)
 			$p.css({
 				'color': 'black',
 				'text-align': 'center',
@@ -315,6 +320,9 @@ const game = {
 			$div.append($button);
 			$('#game-board').empty();
 			$('#game-board').append($div);
+
+
+			// add player switch screen
 
 
 			// console.log(`it is now player${game.whichPlayer} turn!`);

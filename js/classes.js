@@ -4,7 +4,7 @@ class Player {
 
 		if(playerType === 'fighter') {
 			this.class = 'Fighter';
-			this.HP = 18;
+			this.HP = 1;
 			this.speed = 4;
 			this.damage = 5;
 			this.range = 1;
@@ -24,9 +24,9 @@ class Player {
 		if(playerType === 'rogue'){
 			this.class = 'Rogue';
 			this.HP = 12;
-			this.speed = 50;
+			this.speed = 5;
 			this.damage = 4;
-			this.range = 100;
+			this.range = 1;
 			this.icon = 'images/rogue-icon.png';
 			this.blood = 'images/blood.png'
 		}
