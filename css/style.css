@@ -47,18 +47,14 @@ footer {
 #game-board {
 	width: 80vh;
 	height: 80vh;
-	/*background-color: black;*/
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-
-	/*z-index: 0;*/
 	position: relative;
 }
 
 #overlay {
 	position: absolute;
-	/*background-color: rgba(100,100,100, 0.5);*/
 	top: 0px;
 	left: 0px;
 	width: 80vh;
@@ -66,11 +62,21 @@ footer {
 	visibility: hidden;
 }
 
-
-
 .stat-bar {
-	height: 100vh;
 	text-align: center;
+	position: relative;
+}
+
+.stats {
+	height: 100vh;
+	position: relative;
+	max-width: 10vw;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+	overflow-x: hidden;
+	padding: 20px;
 }
 
 #player-one-stats {
@@ -87,23 +93,12 @@ footer {
 	background-color: rgb(218,165,32);
 }
 
-.stats {
-	position: relative;
-	max-width: 10vw;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-around;
-	align-items: center;
-	overflow-x: hidden;
-	padding: 20px;
-}
-
-.arrow-button {
+/*.arrow-button {
 	min-width: 25px;
 	background-color: purple;
 	height: 100%;
 	visibility: hidden;
-}
+}*/
 
 #p1StartScreen, #p2StartScreen {
 	height: 70%;

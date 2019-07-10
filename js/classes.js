@@ -39,6 +39,7 @@ class Player {
 
 	attack(e){
 		game.printBoard()
+		game.buttonsActive = false;
 		if ($($(this).children()[0]).attr('class') === 'icon') {
 
 			if (game[`player${$($(this).children()[0]).attr('id')}`].HP - game[`player${game.whichPlayer}`].damage < 0) {
@@ -73,7 +74,7 @@ class Player {
 			let enemyLeft = `${(enemyCol*10) - 10}%`;
 			let enemyTop =  `${(enemyRow*10) - 10}%`;
 
-			//distination angle from 90deg
+			//distination angle from right side
 
 			Math.degrees = function(radians) {
 			  	return radians * 180 / Math.PI;
@@ -89,15 +90,6 @@ class Player {
 			} else if (sideA < 0 && sideB <= 0 || sideA <= 0 && sideB >= 0) {
 				degrees = Math.degrees(Math.atan(sideB/sideA)) + 180
 			}
-
-			// const degrees = Math.degrees(Math.atan(sideB/sideA))
-
-			console.log(sideA);
-			console.log(sideB);
-			console.log(degrees,' degrees'); 
-
-
-			console.log(enemyLeft,enemyTop);
 
 			if (curPlay.class === 'Wizard') {
 				console.log('wizard animation');
@@ -130,6 +122,7 @@ class Player {
 						game.printBoard();
 						game.checkTurnEnding()
 						game.checkForWin()
+						game.buttonsActive = true;
 					})
 				})
 
@@ -188,7 +181,8 @@ class Player {
 							$('#overlay').empty();
 							game.printBoard();
 							game.checkTurnEnding()
-							game.checkForWin()							
+							game.checkForWin()
+							game.buttonsActive = true;							
 						})	
 					})
 				})
@@ -248,10 +242,10 @@ class Player {
 						game.printBoard();
 						game.checkTurnEnding()
 						game.checkForWin()
+						game.buttonsActive = true;
 					})
 				})
 			}
-
 
 			game[`player${game.whichPlayer}`].attackUsed = true;
 			// game.printBoard();
@@ -262,6 +256,7 @@ class Player {
 
 	move(e){
 		game.printBoard()
+		game.buttonsActive = false;
 		let currentLeft;
 		let currentTop;
 
@@ -301,6 +296,7 @@ class Player {
 		}, 1500, ()=>{
 			$('#overlay').css('visibility','hidden');
 			$('#overlay').empty();
+			game.buttonsActive = true;
 			game.board.forEach((row) => {
 			row.forEach((sq) => {
 
@@ -309,6 +305,7 @@ class Player {
 				}
 			})
 		})
+		game.enableStatBar()
 		game[`player${game.whichPlayer}`].moveUsed = true;
 		game.printBoard()
 		game.checkForWin()

@@ -6,6 +6,7 @@ const game = {
 	turn: 1,
 	totalPlayers: 2,
 	whichPlayer: 1,
+	buttonsActive: true,
 	board:[],
 
 	makePlayer1(){
@@ -224,24 +225,6 @@ const game = {
 
 	},
 
-	// moveIcon(e){
-		// console.log(e.target);
-		// game.printBoard()
-		// game[`player${game.whichPlayer}`].move(e.target);
-		// game.board.forEach((row) => {
-		// 	row.forEach((sq) => {
-
-		// 		if ($(e.target).attr('id') == sq.id) {
-		// 			sq.player = game.whichPlayer;
-		// 		}
-		// 	})
-		// })
-		// game[`player${game.whichPlayer}`].moveUsed = true;
-		// game.printBoard()
-		// game.checkForWin()
-		// game.checkTurnEnding()
-	// },
-
 	highlightAttacks(){
 		const curPlay = game[`player${game.whichPlayer}`];
 
@@ -356,6 +339,14 @@ const game = {
 		}
 	},
 
+	disableStatBar(){
+		$('.stat-shield').css('visibility','visible')
+	},
+
+	enableStatBar(){
+		$('.stat-shield').css('visibility','hidden')
+	},
+
 	animateMessage(){
 		$('#message-box').addClass('messageAnimate')
 		let time = 0;
@@ -371,9 +362,7 @@ const game = {
 }
 
 $('#p1Buttons').on('click',(e)=>{
-	// console.log(e.target);
 	game.player1Class = $(e.target).attr('id');
-	// console.log(game.player1Class);
 	$('button').css({
 		'background-color': 'white',
 		'color': 'black'
@@ -402,32 +391,16 @@ $('#p2Buttons').on('click',(e)=>{
 
 $('#p2StartButton').on('click',game.makePlayer2)
 
-
-$('.icon').on('click',(e)=>{
-	// console.log(e);
-	// console.log(e.target);
-	// console.log($(e.target).data());
-})
-
 $('.attackButton').on('click',() =>{
-	game.printBoard()
-	game.highlightAttacks()
+	if (game.buttonsActive === true) {
+		game.printBoard()
+		game.highlightAttacks()
+	}
 })
 
-$('.passButton').on('click',game.passTurn)
-
-// $('#message-box').on('change',()=>{
-// 	$('#message-box').addClass('messageAnimate')
-// 	$('#message-box').removeClass('messageAnimate')
-// })
-
-$('#demo').on('click',function(e){
-	$(e.target).animate({
-		'margin-left':'100px',
-		// 'background-color': 'green'
-		// 'visibility': 'hidden'
-		'opacity': 0
-	},500)
-	// console.log(e.target);
+$('.passButton').on('click',()=>{
+	if (game.buttonsActive === true) {
+		game.passTurn()
+	}
 })
 
