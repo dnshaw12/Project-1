@@ -87,6 +87,7 @@ const game = {
 			}
 			this.board.push(boardRow);
 		}
+		$('#game-board').css({'box-shadow': '10px 10px 5px black'})
 	},
 
 	printBoard(){
@@ -144,6 +145,7 @@ const game = {
 				$('#game-board').append($div)
 			})
 		})
+		$('#game-board').css({'box-shadow': '10px 10px 5px black'})
 	},
 
 	startGame(){
@@ -287,6 +289,7 @@ const game = {
 			this.buttonsActive = false;
 			curPlay.moveUsed = false;
 			curPlay.attackUsed = false;
+			$('#game-board').css({'box-shadow': '0px 0px 0px black'})
 
 			// add player switch screen
 			const $div = $(`<div></div>`)
@@ -303,6 +306,7 @@ const game = {
 			$button.on('click',()=>{
 				$('.turnSwitch').remove()
 				game.printBoard()
+				$('#game-board').css({'box-shadow': '10px 10px 5px black'})
 				game.buttonsActive = true;
 				$(`.p${game.whichPlayer}Hidden`).css('visibility','visible')
 				this.updateStats()
@@ -348,6 +352,7 @@ const game = {
 			}
 		}
 		if (winner !== undefined) {
+			$('#game-board').css({'box-shadow': '0px 0px 0px black'})
 			$(`.stats`).css('visibility','visible')
 			this.buttonsActive = false;
 			const $div = $(`<div></div>`)

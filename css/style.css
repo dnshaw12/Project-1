@@ -112,8 +112,8 @@ footer {
 	justify-content: space-evenly;
 	border: 1px gold solid;
 	align-items: center;
-	box-shadow: 5px 10px 5px black;
-	background-image: radial-gradient(rgb(218,165,32), gold)
+	box-shadow: 10px 10px 5px black;
+	background-image: radial-gradient(rgb(218,165,32) , gold)
 }
 
 #p1StartScreen {
@@ -144,6 +144,8 @@ input {
 	font-size: 40px; 
 	background-color: white;
 	font-family: 'Almendra', serif;
+	border: 2px solid black;
+	box-shadow: 5px 5px 2px black;
 }
 
 button {
@@ -213,4 +215,10 @@ button {
 	background-size: 100% 100%;
 }
 
+button:hover {
+	color: rgb(218,165,32)
+}
 
+h2 {
+	margin: 0px;
+}
