@@ -156,27 +156,23 @@ button {
 .icon {
 	z-index: 2;
 }
-
 .moveSpace {
 	animation: moveHighlight 2s infinite;
 }
-
-.attackSpace {
-	animation: attackHighlight 1s infinite;
+@keyframes moveHighlight {
+	50% {background-color: yellow;}
 }
 
 .messageAnimate {
 	animation: messageAnimate 1.5s linear 0s 4;
 }
-
-@keyframes moveHighlight {
-	50% {background-color: yellow;}
-}
-
 @keyframes messageAnimate {
 	50% {color: rgb(56, 2, 2);}
 }
 
+.attackSpace {
+	animation: attackHighlight 1s infinite;
+}
 @keyframes attackHighlight {
 	50% {background-color: red;}
 }
@@ -195,4 +191,6 @@ button {
 	background-repeat: no-repeat;
 	background-size: 100% 100%;
 }
+
+
 

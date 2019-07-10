@@ -23,7 +23,7 @@ const game = {
 		if ($('#p2Input').val() === '' || game.player2Class === null) {
 			$('#message-box').text('Please input your name and choose a class!')
 			game.animateMessage();
-			console.log($('#p2Input').val());
+			// console.log($('#p2Input').val());
 		} else {
 			game.player2 = new Player($('#p2Input').val(),game.player2Class)
 			$('#p2StartScreen').remove()
@@ -88,7 +88,7 @@ const game = {
 	},
 
 	printBoard(){
-		console.log('new board printed');
+		// console.log('new board printed');
 		$('#game-board').empty()
 		this.board.forEach((row, i) =>{
 			row.forEach((sq, j) =>{
@@ -117,7 +117,7 @@ const game = {
 				// $div.text(`${j+1}/${i+1}`)
 				//re print the icons
 				if (sq.player === 1) {
-					console.log($div);
+					// console.log($div);
 					$div.append($icon1);
 					this.player1.currentPosition = $div
 					$div.on('click',(e) => {
@@ -128,7 +128,7 @@ const game = {
 
 					})
 				} else if (sq.player === 2) {
-					console.log(sq.player);
+					// console.log(sq.player);
 					$div.append($icon2);
 					this.player2.currentPosition = $div
 					$div.on('click',(e) => {
@@ -185,7 +185,7 @@ const game = {
 						if ($($(board[i]).children()[0]).attr('class') !== 'icon') {
 							// console.log($($(board[i]).children()[0]).attr('class'),'--',board[i]);
 							$(board[i]).addClass('moveSpace')
-							console.log(curPlay);
+							// console.log(curPlay);
 							$(board[i]).on('click',(el)=>{
 								const e = el.target
 								this[`player${game.whichPlayer}`].move(e)
@@ -209,7 +209,7 @@ const game = {
 							if ($($(board[i]).children()[0]).attr('class') !== 'icon') {
 								// console.log($($(board[i]).children()[0]).attr('class'),'--',board[i]);
 								$(board[i]).addClass('moveSpace');
-								console.log(curPlay);
+								// console.log(curPlay);
 								$(board[i]).on('click',(el)=>{
 									const e = el.target
 									this[`player${game.whichPlayer}`].move(e)
@@ -224,10 +224,10 @@ const game = {
 
 	},
 
-	moveIcon(e){
-		console.log(e.target);
-		game.printBoard()
-		game[`player${game.whichPlayer}`].move(e.target);
+	// moveIcon(e){
+		// console.log(e.target);
+		// game.printBoard()
+		// game[`player${game.whichPlayer}`].move(e.target);
 		// game.board.forEach((row) => {
 		// 	row.forEach((sq) => {
 
@@ -240,7 +240,7 @@ const game = {
 		// game.printBoard()
 		// game.checkForWin()
 		// game.checkTurnEnding()
-	},
+	// },
 
 	highlightAttacks(){
 		const curPlay = game[`player${game.whichPlayer}`];
@@ -300,7 +300,11 @@ const game = {
 			}
 			curPlay.moveUsed = false;
 			curPlay.attackUsed = false;
-			console.log(`it is now player${game.whichPlayer} turn!`);
+
+			// add player switch screen
+
+
+			// console.log(`it is now player${game.whichPlayer} turn!`);
 			$(`.p${game.whichPlayer}Hidden`).css('visibility','visible')
 			$('#message-box').text('')
 			this.updateStats()
@@ -356,7 +360,7 @@ const game = {
 		$('#message-box').addClass('messageAnimate')
 		let time = 0;
 		const timer = setInterval(()=>{
-			console.log(time);
+			// console.log(time);
 			time++;
 			if (time === 6) {
 				$('#message-box').removeClass('messageAnimate')
@@ -400,9 +404,9 @@ $('#p2StartButton').on('click',game.makePlayer2)
 
 
 $('.icon').on('click',(e)=>{
-	console.log(e);
-	console.log(e.target);
-	console.log($(e.target).data());
+	// console.log(e);
+	// console.log(e.target);
+	// console.log($(e.target).data());
 })
 
 $('.attackButton').on('click',() =>{
@@ -424,6 +428,6 @@ $('#demo').on('click',function(e){
 		// 'visibility': 'hidden'
 		'opacity': 0
 	},500)
-	console.log(e.target);
+	// console.log(e.target);
 })
 

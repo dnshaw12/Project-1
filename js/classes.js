@@ -12,11 +12,13 @@ class Player {
 		}
 		if(playerType === 'wizard'){
 			this.class = 'Wizard';
-			this.HP = 15;
-			this.speed = 3;
+			this.HP = 100;
+			this.speed = 10;
 			this.damage = 5;
 			this.range = 40;
 			this.icon = 'images/wiz-icon.png'
+			this.fireball = 'images/fireball.gif'
+			this.fire = 'images/fire.gif'
 		}
 		if(playerType === 'rogue'){
 			this.class = 'Rogue';
@@ -34,7 +36,6 @@ class Player {
 	}
 
 	attack(e){
-		console.log(e);
 		if ($($(this).children()[0]).attr('class') === 'icon') {
 
 			if (game[`player${$($(this).children()[0]).attr('id')}`].HP - game[`player${game.whichPlayer}`].damage < 0) {
@@ -42,6 +43,91 @@ class Player {
 				game[`player${$($(this).children()[0]).attr('id')}`].HP = 0
 			} else {
 				game[`player${$($(this).children()[0]).attr('id')}`].HP -= game[`player${game.whichPlayer}`].damage;
+			}
+
+			const board = $('#game-board').children()
+			const curPlay = game[`player${game.whichPlayer}`]
+
+			//get current players location
+			let currentLeft;
+			let currentTop
+			let currCol
+			let currRow
+
+			for (let i = 0; i < board.length; i++) {
+				if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
+					currCol = $(board[i]).data('columnNum')
+					currRow = $(board[i]).data('rowNum')
+					currentLeft = `${(currCol*10) - 10}%`;
+					currentTop = `${(currRow*10) - 10}%`;
+				};
+			}
+
+			// enemy location
+
+			let enemyCol = $(this).data('columnNum')
+			let enemyRow = $(this).data('rowNum')
+			let enemyLeft = `${(enemyCol*10) - 10}%`;
+			let enemyTop =  `${(enemyRow*10) - 10}%`;
+
+			//distination angle from 90deg
+
+			Math.degrees = function(radians) {
+			  	return radians * 180 / Math.PI;
+			};
+
+			const sideA = enemyCol - currCol;
+			const sideB = enemyRow - currRow;
+
+			let degrees;
+
+			if (sideA >= 0 && sideB >= 0 || sideA > 0 && sideB <= 0 || sideA === 0 && sideB <= 0) {
+				degrees = Math.degrees(Math.atan(sideB/sideA))
+			} else if (sideA < 0 && sideB <= 0 || sideA <= 0 && sideB >= 0) {
+				degrees = Math.degrees(Math.atan(sideB/sideA)) + 180
+			}
+
+			// const degrees = Math.degrees(Math.atan(sideB/sideA))
+
+			console.log(sideA);
+			console.log(sideB);
+			console.log(degrees,' degrees'); 
+
+
+			console.log(enemyLeft,enemyTop);
+
+			if (curPlay.class === 'Wizard') {
+				console.log('wizard animation');
+				const $fireball = $(`<img/>`)
+				$fireball.attr('src',curPlay.fireball)
+
+				$fireball.css({
+					'width': '10%',
+					'height': '10%',
+					'margin-top': currentTop,
+					'margin-left': currentLeft,
+					'transform':`rotate(${degrees}deg)`
+				})
+
+				$('#overlay').css('visibility','visible');
+
+				$('#overlay').append($fireball)
+
+				$fireball.animate({
+					'margin-top': enemyTop,
+					'margin-left': enemyLeft,
+				}, 1500, function(){
+					$fireball.attr('src',curPlay.fire)
+					$fireball.css('transform','rotate(0deg)')
+					$fireball.animate({
+						'opacity': '0'
+					},2000, function(){
+						$('#overlay').css('visibility','hidden');
+						$('#overlay').empty();
+					})
+				})
+
+
 			}
 
 
@@ -83,6 +169,8 @@ class Player {
 		$('#overlay').css('visibility','visible');
 
 		$('#overlay').append($icon)
+
+		// custom class animations
 
 		$icon.animate({
 			'margin-top': destinationTop,
