@@ -15,17 +15,19 @@ const game = {
 		} else {
 			game.player1 = new Player($('#p1Input').val(),game.player1Class)
 			$('#p1StartScreen').remove()
+			$('#message-box').text('')
 		} 
 	},
 
 	makePlayer2(){
 		if ($('#p2Input').val() === '' || game.player2Class === null) {
 			$('#message-box').text('Please input your name and choose a class!')
-			this.animateMessage();
+			game.animateMessage();
 			console.log($('#p2Input').val());
 		} else {
 			game.player2 = new Player($('#p2Input').val(),game.player2Class)
 			$('#p2StartScreen').remove()
+			$('#message-box').text('')
 			game.startGame();
 		} 
 	},
@@ -37,7 +39,8 @@ const game = {
 				const $div = $(`<div data-column-num="${j}" id="${j}-${i}" data-row-num="${i}"></div>`);
 				$div.css({
 					'width':'10%',
-					'height':'10%'
+					'height':'10%',
+					'z-index':'0'
 				});
 
 				if (i%2) {
@@ -151,8 +154,10 @@ const game = {
 		$(`.stats`).css('visibility','hidden')
 		$(`.p${this.whichPlayer}Hidden`).css('visibility','visible')
 		$('#turn-number').text(this.turn)
-		$('#p1HP').text(this.player1.HP)
-		$('#p2HP').text(this.player2.HP)
+		for (let i = 1; i <= this.totalPlayers; i++){
+			$(`#p${i}HP`).text(this[`player${i}`].HP)
+			$(`#p${i}Name`).text(this[`player${i}`].name+' the '+this[`player${i}`].class)
+		}
 	},
 
 	highlightMoves(e){
@@ -180,7 +185,11 @@ const game = {
 						if ($($(board[i]).children()[0]).attr('class') !== 'icon') {
 							// console.log($($(board[i]).children()[0]).attr('class'),'--',board[i]);
 							$(board[i]).addClass('moveSpace')
-							$(board[i]).on('click',this.moveIcon)
+							console.log(curPlay);
+							$(board[i]).on('click',(el)=>{
+								const e = el.target
+								this[`player${game.whichPlayer}`].move(e)
+							})
 						}
 					}
 				}
@@ -200,7 +209,11 @@ const game = {
 							if ($($(board[i]).children()[0]).attr('class') !== 'icon') {
 								// console.log($($(board[i]).children()[0]).attr('class'),'--',board[i]);
 								$(board[i]).addClass('moveSpace');
-								$(board[i]).on('click',this.moveIcon)
+								console.log(curPlay);
+								$(board[i]).on('click',(el)=>{
+									const e = el.target
+									this[`player${game.whichPlayer}`].move(e)
+								})
 							}
 						}
 					}
@@ -212,21 +225,21 @@ const game = {
 	},
 
 	moveIcon(e){
-		
-		game.board.forEach((row) => {
-			row.forEach((sq) => {
-				if (sq.player == game.whichPlayer) {
-						sq.player = 0;
-				}
-				if ($(e.target).attr('id') == sq.id) {
-					sq.player = game.whichPlayer;
-				}
-			})
-		})
-		game[`player${game.whichPlayer}`].moveUsed = true;
+		console.log(e.target);
 		game.printBoard()
-		game.checkForWin()
-		game.checkTurnEnding()
+		game[`player${game.whichPlayer}`].move(e.target);
+		// game.board.forEach((row) => {
+		// 	row.forEach((sq) => {
+
+		// 		if ($(e.target).attr('id') == sq.id) {
+		// 			sq.player = game.whichPlayer;
+		// 		}
+		// 	})
+		// })
+		// game[`player${game.whichPlayer}`].moveUsed = true;
+		// game.printBoard()
+		// game.checkForWin()
+		// game.checkTurnEnding()
 	},
 
 	highlightAttacks(){
@@ -289,6 +302,7 @@ const game = {
 			curPlay.attackUsed = false;
 			console.log(`it is now player${game.whichPlayer} turn!`);
 			$(`.p${game.whichPlayer}Hidden`).css('visibility','visible')
+			$('#message-box').text('')
 			this.updateStats()
 			this.printBoard()
 		}
@@ -302,11 +316,12 @@ const game = {
 	},
 
 	checkForWin(){
+		this.updateStats()
 		let totalDead = 0;
 		let winner;
 		for (let i = 1; i <= this.totalPlayers; i++){
 			const player = this[`player${i}`]
-			if (player.HP <= 0 && player.isAlive === true) {
+			if (player.HP === 0 && player.isAlive === true) {
 				player.isAlive = false;
 				totalDead++;
 			}	
@@ -320,7 +335,20 @@ const game = {
 			}
 		}
 		if (winner !== undefined) {
-			console.log(`${winner.name} Wins!!!`);
+			$(`.stats`).css('visibility','visible')
+			$(`button`).css('visibility','hidden')
+			const $div = $(`<div></div>`)
+			$div.addClass('endScreen')
+			$p = $(`<p>${winner.name} the ${winner.class} Wins!</p>`)
+			$p.css({
+				'color': 'black',
+				'text-align': 'center',
+				'font-size': '5vh',
+
+			})
+			$div.append($p);
+			$('#game-board').empty();
+			$('#game-board').append($div);
 		}
 	},
 
@@ -389,4 +417,13 @@ $('.passButton').on('click',game.passTurn)
 // 	$('#message-box').removeClass('messageAnimate')
 // })
 
+$('#demo').on('click',function(e){
+	$(e.target).animate({
+		'margin-left':'100px',
+		// 'background-color': 'green'
+		// 'visibility': 'hidden'
+		'opacity': 0
+	},500)
+	console.log(e.target);
+})
 
