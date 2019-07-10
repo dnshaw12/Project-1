@@ -219,6 +219,14 @@ button:hover {
 	color: rgb(218,165,32)
 }
 
+.attackButton:hover {
+	color: rgb(218,165,32)
+}
+
+.passButton:hover {
+	color: rgb(218,165,32)
+}
+
 h2 {
 	margin: 0px;
 }

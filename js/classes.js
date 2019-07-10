@@ -121,8 +121,8 @@ class Player {
 						$('#overlay').css('visibility','hidden');
 						$('#overlay').empty();
 						game.printBoard();
-						game.checkTurnEnding()
 						game.checkForWin()
+						game.checkTurnEnding()
 						game.buttonsActive = true;
 					})
 				})
@@ -181,8 +181,8 @@ class Player {
 							$('#overlay').css('visibility','hidden');
 							$('#overlay').empty();
 							game.printBoard();
-							game.checkTurnEnding()
 							game.checkForWin()
+							game.checkTurnEnding()
 							game.buttonsActive = true;							
 						})	
 					})
@@ -241,8 +241,8 @@ class Player {
 						$('#overlay').css('visibility','hidden');
 						$('#overlay').empty();
 						game.printBoard();
-						game.checkTurnEnding()
 						game.checkForWin()
+						game.checkTurnEnding()
 						game.buttonsActive = true;
 					})
 				})

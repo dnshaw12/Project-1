@@ -278,11 +278,10 @@ const game = {
 	checkTurnEnding(){
 		const curPlay = game[`player${game.whichPlayer}`];
 		if (curPlay.moveUsed === true && curPlay. attackUsed === true) {
+			$(`.p${game.whichPlayer}Hidden`).css('visibility','hidden')
 			if (this.whichPlayer !== this.totalPlayers) {
-				$(`.p${game.whichPlayer}Hidden`).css('visibility','hidden')
 				this.whichPlayer++;
 			} else {
-				$(`.p${game.whichPlayer}Hidden`).css('visibility','hidden')
 				this.whichPlayer = 1;
 				this.turn++;
 			}
