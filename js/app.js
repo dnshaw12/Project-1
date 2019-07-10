@@ -15,7 +15,13 @@ const game = {
 			$('#message-box').text('Please input your name and choose a class!')
 			game.animateMessage();
 		} else {
-			game.player1 = new Player($('#p1Input').val(),game.player1Class)
+			if (game.player1Class === 'fighter') {
+				game.player1 = new Fighter($('#p1Input').val())
+			} else if (game.player1Class === 'wizard') {
+				game.player1 = new Wizard($('#p1Input').val())
+			} else if (game.player1Class === 'rogue') {
+				game.player1 = new Rogue($('#p1Input').val())
+			}
 			$('#p1StartScreen').remove()
 			$('#message-box').text('')
 		} 
@@ -25,12 +31,17 @@ const game = {
 		if ($('#p2Input').val() === '' || game.player2Class === null) {
 			$('#message-box').text('Please input your name and choose a class!')
 			game.animateMessage();
-			// console.log($('#p2Input').val());
 		} else {
-			game.player2 = new Player($('#p2Input').val(),game.player2Class)
+			if (game.player2Class === 'fighter') {
+				game.player2 = new Fighter($('#p2Input').val())
+			} else if (game.player2Class === 'wizard') {
+				game.player2 = new Wizard($('#p2Input').val())
+			} else if (game.player2Class === 'rogue') {
+				game.player2 = new Rogue($('#p2Input').val())
+			}
 			$('#p2StartScreen').remove()
 			$('#message-box').text('')
-			game.startGame();
+			game.startGame()
 		} 
 	},
 
@@ -62,8 +73,8 @@ const game = {
 				$('#game-board').append($div)
 				const sqObj = new Square(i,j);
 				boardRow.push(sqObj)
-				const $icon1 = $(`<img src="${this.player1.icon}" class='icon' id=1 height="100%" width="100%">`)
-				const $icon2 = $(`<img src="${this.player2.icon}" class='icon' id=2 height="100%" width="100%">`)
+				const $icon1 = $(`<img src="${this.player1.icon}" class='icon ${this.player1.isInvisible}' id=1 height="100%" width="100%">`)
+				const $icon2 = $(`<img src="${this.player2.icon}" class='icon ${this.player2.isInvisible}' id=2 height="100%" width="100%">`)
 
 				if (i === 1 && j === 1) {
 					$div.append($icon1)
@@ -114,8 +125,8 @@ const game = {
 						$div.css('background-color','white')
 					}
 				}
-				const $icon1 = $(`<img src="${this.player1.icon}" class='icon' id=1 height="100%" width="100%">`)
-				const $icon2 = $(`<img src="${this.player2.icon}" class='icon' id=2 height="100%" width="100%">`)
+				const $icon1 = $(`<img src="${this.player1.icon}" class='icon ${this.player1.isInvisible}' id=1 height="100%" width="100%">`)
+				const $icon2 = $(`<img src="${this.player2.icon}" class='icon ${this.player2.isInvisible}' id=2 height="100%" width="100%">`)
 
 				// $div.text(`${j+1}/${i+1}`)
 				//re print the icons
@@ -151,6 +162,7 @@ const game = {
 	startGame(){
 		this.makeBoard();
 		this.updateStats()
+		$('#p1HP').on('click',game.player1.ability)
 
 	},
 
@@ -316,6 +328,14 @@ const game = {
 			$('#game-board').empty();
 			$('#game-board').append($div);
 
+			if (curPlay.isInvisible !== null) {
+				curPlay.inisibleTurns++
+				console.log('inivible counter',curPlay.inisibleTurns);
+			}
+			if (curPlay.inisibleTurns > 2) {
+				curPlay.isInvisible = null;
+			}
+
 
 			// console.log(`it is now player${game.whichPlayer} turn!`);
 			
@@ -421,4 +441,5 @@ $('.passButton').on('click',()=>{
 		game.passTurn()
 	}
 })
+
 

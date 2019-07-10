@@ -1,35 +1,36 @@
 class Player {
-	constructor(name, playerType) {
+	constructor(name, playerNum) {
 		this.name = name;
+		this.playerNum = playerNum
 
-		if(playerType === 'fighter') {
-			this.class = 'Fighter';
-			this.HP = 18;
-			this.speed = 4;
-			this.damage = 5;
-			this.range = 1;
-			this.icon = 'images/fighter-icon.png'
-			this.pow = 'images/pow.png'
-		}
-		if(playerType === 'wizard'){
-			this.class = 'Wizard';
-			this.HP = 15;
-			this.speed = 3;
-			this.damage = 5;
-			this.range = 40;
-			this.icon = 'images/wiz-icon.png'
-			this.fireball = 'images/fireball.gif'
-			this.fire = 'images/fire.gif'
-		}
-		if(playerType === 'rogue'){
-			this.class = 'Rogue';
-			this.HP = 12;
-			this.speed = 50;
-			this.damage = 4;
-			this.range = 100;
-			this.icon = 'images/rogue-icon.png';
-			this.blood = 'images/blood.png'
-		}
+		// if(playerType === 'fighter') {
+		// 	this.class = 'Fighter';
+		// 	this.HP = 18;
+		// 	this.speed = 4;
+		// 	this.damage = 5;
+		// 	this.range = 1;
+		// 	this.icon = 'images/fighter-icon.png'
+		// 	this.pow = 'images/pow.png'
+		// }
+		// if(playerType === 'wizard'){
+		// 	this.class = 'Wizard';
+		// 	this.HP = 15;
+		// 	this.speed = 3;
+		// 	this.damage = 5;
+		// 	this.range = 40;
+		// 	this.icon = 'images/wiz-icon.png'
+		// 	this.fireball = 'images/fireball.gif'
+		// 	this.fire = 'images/fire.gif'
+		// }
+		// if(playerType === 'rogue'){
+		// 	this.class = 'Rogue';
+		// 	this.HP = 12;
+		// 	this.speed = 50;
+		// 	this.damage = 4;
+		// 	this.range = 100;
+		// 	this.icon = 'images/rogue-icon.png';
+		// 	this.blood = 'images/blood.png'
+		// }
 
 		this.currentPosition = null;
 		this.moveUsed = false;
@@ -311,6 +312,55 @@ class Player {
 		game.checkForWin()
 		game.checkTurnEnding()
 		})		
+
+	}
+}
+
+class Fighter extends Player {
+	constructor(name, playerNum){
+		super(name, playerNum);
+		this.class = 'Fighter';
+		this.HP = 18;
+		this.speed = 4;
+		this.damage = 5;
+		this.range = 1;
+		this.icon = 'images/fighter-icon.png'
+		this.pow = 'images/pow.png'
+	}
+}
+
+class Wizard extends Player {
+	constructor(name, playerNum){
+		super(name, playerNum);
+		this.class = 'Wizard';
+		this.HP = 15;
+		this.speed = 3;
+		this.damage = 5;
+		this.range = 40;
+		this.icon = 'images/wiz-icon.png'
+		this.fireball = 'images/fireball.gif'
+		this.fire = 'images/fire.gif'
+	}
+}
+
+class Rogue extends Player {
+	constructor(name, playerNum){
+		super(name, playerNum);
+		this.class = 'Rogue';
+		this.HP = 12;
+		this.speed = 50;
+		this.damage = 4;
+		this.range = 100;
+		this.icon = 'images/rogue-icon.png';
+		this.blood = 'images/blood.png'
+		this.inisibleTurns = 0;
+		this.isInvisible = null;
+	}
+	ability(){
+		game[`player${game.whichPlayer}`].isInvisible = `p${game.whichPlayer}Hidden`
+		// console.log(this);
+		console.log(`p${game.whichPlayer}Hidden`);
+		// console.log('rogue ability');
 
 	}
 }
