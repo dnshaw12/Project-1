@@ -124,12 +124,9 @@ footer {
 	background-color: rgb(218,165,32);
 }
 
-/*.arrow-button {
-	min-width: 25px;
-	background-color: purple;
-	height: 100%;
-	visibility: hidden;
-}*/
+#p1Name, #p2Name {
+	font-size: 20px;
+}
 
 #p1StartScreen, #p2StartScreen {
 	height: 70%;

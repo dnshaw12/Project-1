@@ -193,7 +193,7 @@ const game = {
 		$('#turn-number').text(this.turn)
 		for (let i = 1; i <= this.totalPlayers; i++){
 			$(`#p${i}HP`).text(this[`player${i}`].HP)
-			$(`#p${i}Name`).text(this[`player${i}`].name+' the '+this[`player${i}`].class)
+			$(`#p${i}Name`).text(this[`player${i}`].name+': the '+this[`player${i}`].class)
 		}
 	},
 
@@ -390,7 +390,7 @@ const game = {
 			const $div = $(`<div></div>`)
 			const $button = $(`<button id="start-turn">Take Turn</button>`)
 			$div.addClass('turnSwitch')
-			const $p = $(`<p>Turn ${this.turn}: It's ${nextPlayer.name} the ${nextPlayer.class}'s turn!</p>`)
+			const $p = $(`<p>Turn ${this.turn}: It's ${nextPlayer.name}: the ${nextPlayer.class}'s turn!</p>`)
 			const $p2 = $(`<p>You took ${this.lastTurnDamage} damage!</p>`)
 			$p.css({
 				'color': 'black',
