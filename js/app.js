@@ -15,8 +15,14 @@ const game = {
 			$('#message-box').text('Please input your name and choose a class!')
 			game.animateMessage();
 		} else {
-			game.player1 = new Player($('#p1Input').val(),game.player1Class)
-			$('#p1StartScreen').remove()
+			if (game.player1Class === 'fighter') {
+				game.player1 = new Fighter($('#p1Input').val(),1)
+			} else if (game.player1Class === 'wizard') {
+				game.player1 = new Wizard($('#p1Input').val(),1)
+			} else if (game.player1Class === 'rogue') {
+				game.player1 = new Rogue($('#p1Input').val(),1)
+			}
+			$('#p1StartScreen').css('visibility','hidden')
 			$('#message-box').text('')
 		} 
 	},
@@ -25,12 +31,17 @@ const game = {
 		if ($('#p2Input').val() === '' || game.player2Class === null) {
 			$('#message-box').text('Please input your name and choose a class!')
 			game.animateMessage();
-			// console.log($('#p2Input').val());
 		} else {
-			game.player2 = new Player($('#p2Input').val(),game.player2Class)
-			$('#p2StartScreen').remove()
+			if (game.player2Class === 'fighter') {
+				game.player2 = new Fighter($('#p2Input').val(),2)
+			} else if (game.player2Class === 'wizard') {
+				game.player2 = new Wizard($('#p2Input').val(),2)
+			} else if (game.player2Class === 'rogue') {
+				game.player2 = new Rogue($('#p2Input').val(),2)
+			}
+			$('#p2StartScreen').css('visibility','hidden')
 			$('#message-box').text('')
-			game.startGame();
+			game.startGame()
 		} 
 	},
 
@@ -62,8 +73,8 @@ const game = {
 				$('#game-board').append($div)
 				const sqObj = new Square(i,j);
 				boardRow.push(sqObj)
-				const $icon1 = $(`<img src="${this.player1.icon}" class='icon' id=1 height="100%" width="100%">`)
-				const $icon2 = $(`<img src="${this.player2.icon}" class='icon' id=2 height="100%" width="100%">`)
+				const $icon1 = $(`<img src="${this.player1.icon}" class='icon ${this.player1.abilityActive}' id=1 height="100%" width="100%">`)
+				const $icon2 = $(`<img src="${this.player2.icon}" class='icon ${this.player2.abilityActive}' id=2 height="100%" width="100%">`)
 
 				if (i === 1 && j === 1) {
 					$div.append($icon1)
@@ -91,7 +102,7 @@ const game = {
 	},
 
 	printBoard(){
-		// console.log('new board printed');
+		console.log('new board printed');
 		$('#game-board').empty()
 		this.board.forEach((row, i) =>{
 			row.forEach((sq, j) =>{
@@ -114,8 +125,8 @@ const game = {
 						$div.css('background-color','white')
 					}
 				}
-				const $icon1 = $(`<img src="${this.player1.icon}" class='icon' id=1 height="100%" width="100%">`)
-				const $icon2 = $(`<img src="${this.player2.icon}" class='icon' id=2 height="100%" width="100%">`)
+				const $icon1 = $(`<img src="${this.player1.icon}" class='icon ${this.player1.abilityActive}' id=1 height="100%" width="100%">`)
+				const $icon2 = $(`<img src="${this.player2.icon}" class='icon ${this.player2.abilityActive}' id=2 height="100%" width="100%">`)
 
 				// $div.text(`${j+1}/${i+1}`)
 				//re print the icons
@@ -145,6 +156,29 @@ const game = {
 				$('#game-board').append($div)
 			})
 		})
+
+		//check for invisibility and set opacity
+
+		const board = $('#game-board').children()
+		for (let i = 0; i < board.length; i++) {
+			const $img = $($(board[i]).children()[0])
+			if ($img.hasClass('invisible') && parseInt($img.attr('id')) === this.whichPlayer) {
+				$img.css('opacity','0.3');
+			} else if ($img.hasClass('invisible') && parseInt($img.attr('id')) !== this.whichPlayer) {
+				$img.css('opacity','0')
+			}
+		}
+
+
+		for (let i = 1; i <= this.totalPlayers; i++){
+
+			//use player current postion to set opacity to 0
+			//handle insisibility own function
+
+
+
+		}
+		$(`.p${this.whichPlayer}Hidden`).css('visibility','visible')
 		$('#game-board').css({'box-shadow': '10px 10px 5px black'})
 	},
 
@@ -186,7 +220,7 @@ const game = {
 
 						$(board[i]).attr('data-row-num') === rowNum && $(board[i]).attr('data-column-num') >= parseInt(colNum) - curPlay.speed && $(board[i]).attr('data-column-num') < parseInt(colNum)) {
 
-						if ($($(board[i]).children()[0]).attr('class') !== 'icon') {
+						if (!$($(board[i]).children()[0]).hasClass('icon')) {
 							// console.log($($(board[i]).children()[0]).attr('class'),'--',board[i]);
 							$(board[i]).addClass('moveSpace')
 							// console.log(curPlay);
@@ -195,6 +229,14 @@ const game = {
 								this[`player${game.whichPlayer}`].move(e)
 							})
 						}
+						if ($($(board[i]).children()[0]).hasClass('icon') && $($(board[i]).children()[0]).hasClass('invisible')) {
+								$(board[i]).addClass('moveSpace');
+								$(board[i]).on('click',(el)=>{
+									$('#message-box').text('You stepped on an invisible person!');
+									game.animateMessage();
+									this.handleInvisible($($(board[i]).children()[0]).attr('id'));
+								})
+							}
 					}
 				}
 
@@ -210,13 +252,19 @@ const game = {
 
 							$(board[i]).attr('data-column-num') == parseInt(colNum) - j && $(board[i]).attr('data-row-num') <= parseInt(rowNum) + curPlay.speed - j && $(board[i]).attr('data-row-num') > parseInt(rowNum)){
 
-							if ($($(board[i]).children()[0]).attr('class') !== 'icon') {
+							if (!$($(board[i]).children()[0]).hasClass('icon')) {
 								// console.log($($(board[i]).children()[0]).attr('class'),'--',board[i]);
 								$(board[i]).addClass('moveSpace');
 								// console.log(curPlay);
 								$(board[i]).on('click',(el)=>{
 									const e = el.target
 									this[`player${game.whichPlayer}`].move(e)
+								})
+							}
+							if ($($(board[i]).children()[0]).hasClass('icon') && $($(board[i]).children()[0]).hasClass('invisible')) {
+								$(board[i]).addClass('moveSpace');
+								$(board[i]).on('click',(el)=>{
+									this.handleInvisible($($(board[i]).children()[0]).attr('id'));
 								})
 							}
 						}
@@ -275,9 +323,60 @@ const game = {
 		
 	},
 
+	handleInvisible(invisiblePlayer){
+		$('#message-box').text('You found an invisible person!');
+		this.animateMessage();
+		$unhide = this[`player${invisiblePlayer}`];
+		$unhide.abilityActive = null;
+		$unhide.opacity = 1;
+
+
+		const curPlay = this[`player${invisiblePlayer}`]
+		const board = $('#game-board').children()
+
+		let currCol;
+		let currRow;
+		let currentLeft;
+		let currentTop;
+
+		for (let i = 0; i < board.length; i++) {
+			if (parseInt($($(board[i]).children()[0]).attr('id')) === $unhide.playerNum) {
+				currCol = $(board[i]).data('columnNum')
+				currRow = $(board[i]).data('rowNum')
+				currentLeft = `${(currCol*10) - 10}%`;
+				currentTop = `${(currRow*10) - 10}%`;
+			};
+		}
+
+		let icon;
+		for (let i = 0; i < board.length; i++){
+			if (parseInt($($(board[i]).children()[0]).attr('id')) === $unhide.playerNum) {
+				icon = $($(board[i]).children()[0]);
+			}
+		}
+		
+		icon.animate({
+			'opacity': '1',
+		}, 3000, function(){
+			$('#overlay').css('visibility','hidden');
+			$('#overlay').empty();
+			game.printBoard();
+			game.buttonsActive = true;							
+		})
+	},
+
 	checkTurnEnding(){
 		const curPlay = game[`player${game.whichPlayer}`];
-		if (curPlay.moveUsed === true && curPlay.attackUsed === true) {
+		let totalDead = 0;
+		for (let i = 1; i <= this.totalPlayers; i++){
+			const player = this[`player${i}`]
+			if (player.HP === 0 && player.isAlive === true) {
+				player.isAlive = false;
+				totalDead++;
+			}	
+		}
+		console.log(totalDead);
+		if (curPlay.moveUsed === true && curPlay. attackUsed === true && totalDead !== this.totalPlayers - 1 ) {
 
 			$(`.p${game.whichPlayer}Hidden`).css('visibility','hidden')
 
@@ -293,6 +392,7 @@ const game = {
 			curPlay.attackUsed = false;
 			$('#game-board').css({'box-shadow': '0px 0px 0px black'})
 
+<<<<<<< HEAD
 			const nextPlayer = game[`player${game.whichPlayer}`]
 
 			const $p = $(`<p>Turn ${this.turn}: It's ${nextPlayer.name} the ${nextPlayer.class}'s turn!</p>`)
@@ -301,6 +401,16 @@ const game = {
 			const $div = $(`<div></div>`)
 			const $button = $(`<button id="start-turn">Take Turn</button>`)
 			$div.addClass('turnSwitch')
+=======
+			// add player switch screen
+			const nextPlayer = game[`player${game.whichPlayer}`]
+
+			const $div = $(`<div></div>`)
+			const $button = $(`<button id="start-turn">Take Turn</button>`)
+			$div.addClass('turnSwitch')
+			const $p = $(`<p>Turn ${this.turn}: It's ${nextPlayer.name} the ${nextPlayer.class}'s turn!</p>`)
+			const $p2 = $(`<p>You took ${this.lastTurnDamage} damage!</p>`)
+>>>>>>> abilities
 			$p.css({
 				'color': 'black',
 				'text-align': 'center',
@@ -321,6 +431,23 @@ const game = {
 			$('#game-board').empty();
 			$('#game-board').append($div);
 
+			if (curPlay.abilityActive !== null && curPlay.abilityActive !== 'teleport') {
+				curPlay.abilityTurns++
+				console.log(curPlay);
+				console.log('ability counter',curPlay.abilityTurns);
+			}
+			if (curPlay.abilityActive === 'teleport' && curPlay.abilityTurns === 2) {
+				curPlay.abilityActive = null;
+				curPlay.speed = curPlay.originalSpeed;
+			}
+			if (curPlay.abilityTurns > 2) {
+				curPlay.abilityActive = null;
+				curPlay.opacity = 1;
+				if (curPlay.class === 'Fighter') {
+					curPlay.icon = 'images/fighter-icon.png'
+				}
+			}
+
 
 			// add player switch screen
 
@@ -333,6 +460,7 @@ const game = {
 	},
 
 	passTurn(){
+		console.log('pass');
 		const curPlay = game[`player${game.whichPlayer}`];
 		curPlay.moveUsed = true;
 		curPlay.attackUsed = true;
@@ -362,16 +490,24 @@ const game = {
 			$('#game-board').css({'box-shadow': '0px 0px 0px black'})
 			$(`.stats`).css('visibility','visible')
 			this.buttonsActive = false;
-			const $div = $(`<div></div>`)
+			const $div = $(`<div id='end-game'></div>`)
 			$div.addClass('endScreen')
 			$p = $(`<p>${winner.name} the ${winner.class} Wins!</p>`)
+			$button = $(`<button id='reset'>Play Again!</button>`)
+			$div.css({
+
+			})
 			$p.css({
 				'color': 'black',
 				'text-align': 'center',
 				'font-size': '5vh',
 
 			})
+			$button.on('click', ()=>{
+				this.resetGame()
+			})
 			$div.append($p);
+			$div.append($button);
 			$('#game-board').empty();
 			$('#game-board').append($div);
 		}
@@ -388,6 +524,21 @@ const game = {
 				clearInterval(timer)
 			}
 		},1000)
+	},
+
+	resetGame(){
+		for (let i = 1; i <= this.totalPlayers; i++){
+			this[`player${i}`] = null
+			$(`#p${i}StartScreen`).css('visibility','visible')
+			$(`.p${i}Hidden`).css('visibility','hidden')
+		}
+		this.board = [];
+		$('#end-game').remove();
+		$('input').val('')
+		this.turn = 1;
+		this.whichPlayer = 1;
+		this.buttonsActive = true;
+
 	}
 }
 
@@ -429,4 +580,15 @@ $('.passButton').on('click',()=>{
 		game.passTurn()
 	}
 })
+
+$('.abilityButton').on('click',()=>{
+	if (game.buttonsActive === true && game[`player${game.whichPlayer}`].abilityUsed === false) {
+		game[`player${game.whichPlayer}`].useAbility()
+		game.printBoard()
+	} else if (game.buttonsActive !== true && game[`player${game.whichPlayer}`].abilityUsed === false) {
+		$('#message-box').text('You have already used your ability this game!')
+		game.animateMessage()
+	}
+})
+
 
