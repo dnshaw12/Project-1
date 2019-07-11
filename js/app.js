@@ -73,8 +73,8 @@ const game = {
 				$('#game-board').append($div)
 				const sqObj = new Square(i,j);
 				boardRow.push(sqObj)
-				const $icon1 = $(`<img src="${this.player1.icon}" class='icon ${this.player1.isInvisible}' id=1 height="100%" width="100%">`)
-				const $icon2 = $(`<img src="${this.player2.icon}" class='icon ${this.player2.isInvisible}' id=2 height="100%" width="100%">`)
+				const $icon1 = $(`<img src="${this.player1.icon}" class='icon ${this.player1.abilityActive}' id=1 height="100%" width="100%">`)
+				const $icon2 = $(`<img src="${this.player2.icon}" class='icon ${this.player2.abilityActive}' id=2 height="100%" width="100%">`)
 
 				if (i === 1 && j === 1) {
 					$div.append($icon1)
@@ -125,8 +125,8 @@ const game = {
 						$div.css('background-color','white')
 					}
 				}
-				const $icon1 = $(`<img src="${this.player1.icon}" class='icon ${this.player1.isInvisible}' id=1 height="100%" width="100%">`)
-				const $icon2 = $(`<img src="${this.player2.icon}" class='icon ${this.player2.isInvisible}' id=2 height="100%" width="100%">`)
+				const $icon1 = $(`<img src="${this.player1.icon}" class='icon ${this.player1.abilityActive}' id=1 height="100%" width="100%">`)
+				const $icon2 = $(`<img src="${this.player2.icon}" class='icon ${this.player2.abilityActive}' id=2 height="100%" width="100%">`)
 
 				// $div.text(`${j+1}/${i+1}`)
 				//re print the icons
@@ -329,7 +329,8 @@ const game = {
 		$('#message-box').text('You found an invisible person!');
 		this.animateMessage();
 		$unhide = this[`player${invisiblePlayer}`];
-		$unhide.isInvisible = null;
+		$unhide.abilityActive = null;
+		$unhide.opacity = 1;
 
 
 		const curPlay = this[`player${invisiblePlayer}`]
@@ -409,12 +410,15 @@ const game = {
 			$('#game-board').empty();
 			$('#game-board').append($div);
 
-			if (curPlay.isInvisible !== null) {
-				curPlay.inisibleTurns++
-				console.log('inivible counter',curPlay.inisibleTurns);
+			if (curPlay.abilityActive !== null) {
+				curPlay.abilityTurns++
+				console.log('ability counter',curPlay.abilityTurns);
 			}
-			if (curPlay.inisibleTurns > 2) {
-				curPlay.isInvisible = null;
+			if (curPlay.abilityTurns > 2) {
+				curPlay.abilityActive = null;
+				if (curPlay.class === 'Fighter') {
+					curPlay.icon = 'images/fighter-icon.png'
+				}
 			}
 
 
@@ -526,9 +530,8 @@ $('.passButton').on('click',()=>{
 
 $('.abilityButton').on('click',()=>{
 	if (game.buttonsActive === true && game[`player${game.whichPlayer}`].abilityUsed === false) {
-		game[`player${game.whichPlayer}`].ability()
+		game[`player${game.whichPlayer}`].useAbility()
 		game.printBoard()
-		game[`player${game.whichPlayer}`].abilityUsed = true;
 	} else {
 		$('#message-box').text('You have already used your ability this game!')
 		game.animateMessage()

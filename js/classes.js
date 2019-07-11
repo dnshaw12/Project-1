@@ -36,7 +36,10 @@ class Player {
 		this.moveUsed = false;
 		this.attackUsed = false;
 		this.isAlive = true;
+		this.abilityTurns = 0;
+		this.abilityActive = null;
 		this.abilityUsed = false;
+		this.opacity = 1;
 	}
 
 	attack(e){
@@ -199,7 +202,8 @@ class Player {
 				'margin-top': currentTop,
 				'margin-left': currentLeft,
 				'transform':`rotate(${degrees+225}deg)`,
-				'position': 'absolute'
+				'position': 'absolute',
+				'opacity': game[`player${game.whichPlayer}`].opacity
 			})
 
 
@@ -244,27 +248,42 @@ class Player {
 			})
 		}
 
-		if ($($(this).children()[0]).hasClass('icon')&& !$($(this).children()[0]).hasClass('invisible')) {
+		if ($($(this).children()[0]).hasClass('icon') && !$($(this).children()[0]).hasClass('shielded')) {
+			if ($($(this).children()[0]).hasClass('icon')&& !$($(this).children()[0]).hasClass('invisible')) {
 
-			if (game[`player${$($(this).children()[0]).attr('id')}`].HP - game[`player${game.whichPlayer}`].damage < 0) {
+				if (game[`player${$($(this).children()[0]).attr('id')}`].HP - game[`player${game.whichPlayer}`].damage < 0) {
 
-				game[`player${$($(this).children()[0]).attr('id')}`].HP = 0;
+					game[`player${$($(this).children()[0]).attr('id')}`].HP = 0;
+				} else {
+					game[`player${$($(this).children()[0]).attr('id')}`].HP -= game[`player${game.whichPlayer}`].damage;
+					game.lastTurnDamage = game[`player${game.whichPlayer}`].damage;
+				}
+			} else if ($($(this).children()[0]).hasClass('icon') && $($(this).children()[0]).hasClass('invisible')) {
+
+				game.handleInvisible($($(this).children()[0]).attr('id'))
+				
+				if (game[`player${$($(this).children()[0]).attr('id')}`].HP - game[`player${game.whichPlayer}`].damage < 0) {
+
+					game[`player${$($(this).children()[0]).attr('id')}`].HP = 0;
+				} else {
+					game[`player${$($(this).children()[0]).attr('id')}`].HP -= game[`player${game.whichPlayer}`].damage;
+					game.lastTurnDamage = game[`player${game.whichPlayer}`].damage;
+				}
 			} else {
-				game[`player${$($(this).children()[0]).attr('id')}`].HP -= game[`player${game.whichPlayer}`].damage;
-				game.lastTurnDamage = game[`player${game.whichPlayer}`].damage;
+				$('#message-box').text('You missed!')
+				game.animateMessage()
 			}
-		} else if ($($(this).children()[0]).hasClass('icon') && $($(this).children()[0]).hasClass('invisible')) {
+		} else if ($($(this).children()[0]).hasClass('icon') && $($(this).children()[0]).hasClass('shielded')) {
 
-			game.handleInvisible($($(this).children()[0]).attr('id'))
-			
 			if (game[`player${$($(this).children()[0]).attr('id')}`].HP - game[`player${game.whichPlayer}`].damage < 0) {
 
 				game[`player${$($(this).children()[0]).attr('id')}`].HP = 0;
 			} else {
-				game[`player${$($(this).children()[0]).attr('id')}`].HP -= game[`player${game.whichPlayer}`].damage;
-				game.lastTurnDamage = game[`player${game.whichPlayer}`].damage;
+				game[`player${$($(this).children()[0]).attr('id')}`].HP -= game[`player${game.whichPlayer}`].damage/2;
+				game.lastTurnDamage = game[`player${game.whichPlayer}`].damage/2;
 			}
 		}
+
 
 		game[`player${game.whichPlayer}`].attackUsed = true;
 		// game.printBoard();
@@ -299,6 +318,7 @@ class Player {
 			'height': '10%',
 			'margin-top': currentTop,
 			'margin-left': currentLeft,
+			'opacity': game[`player${game.whichPlayer}`].opacity
 		})
 		game.printBoard()
 		$('#overlay').css('visibility','visible');
@@ -331,6 +351,10 @@ class Player {
 		})		
 
 	}
+
+	initiateAbility(){
+		this.abilityUsed = true
+	}
 }
 
 class Fighter extends Player {
@@ -343,6 +367,68 @@ class Fighter extends Player {
 		this.range = 1;
 		this.icon = 'images/fighter-icon.png'
 		this.pow = 'images/pow.png'
+		this.shielded = 'images/fighter-icon-shield.png'
+	}
+	useAbility() {
+		super.initiateAbility()
+		/// Shield Up (helf damage for 2 turns)
+
+		game[`player${game.whichPlayer}`].abilityActive = `shielded`
+
+		const curPlay = game[`player${game.whichPlayer}`]
+		const board = $('#game-board').children()
+
+		let currCol;
+		let currRow;
+		let currentLeft;
+		let currentTop;
+
+		for (let i = 0; i < board.length; i++) {
+			if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
+				currCol = $(board[i]).data('columnNum')
+				currRow = $(board[i]).data('rowNum')
+				currentLeft = `${(currCol*10) - 10}%`;
+				currentTop = `${(currRow*10) - 10}%`;
+			};
+		}
+
+		let icon;
+		for (let i = 0; i < board.length; i++){
+			if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
+				icon = $($(board[i]).children()[0]);
+			}
+		}
+
+		const $shield = $(`<img/>`)
+
+		$shield.attr('src',curPlay.shielded)
+		$shield.css({
+			'width': '10%',
+			'height': '10%',
+			'margin-top': currentTop,
+			'margin-left': currentLeft,
+			'opacity': '0'
+		})
+
+		$('#overlay').css('visibility','visible');
+
+		$('#overlay').append($shield)
+
+		console.log(curPlay);
+
+		$shield.animate({
+			'opacity': '1'
+		}, 2000,'easeOutBounce', function(){
+			console.log('animation shield');
+			curPlay.icon = 'images/fighter-icon-shield.png'
+			$('#overlay').css('visibility','hidden');
+			$('#overlay').empty();
+			game.printBoard();
+			game.checkForWin()
+			game.checkTurnEnding()
+			game.buttonsActive = true;							
+		})
+
 	}
 }
 
@@ -358,6 +444,11 @@ class Wizard extends Player {
 		this.fireball = 'images/fireball.gif'
 		this.fire = 'images/fire.gif'
 	}
+	useAbility() {
+		super.initiateAbility()
+		/// 
+
+	}
 }
 
 class Rogue extends Player {
@@ -370,13 +461,13 @@ class Rogue extends Player {
 		this.range = 100;
 		this.icon = 'images/rogue-icon.png';
 		this.blood = 'images/blood.png'
-		this.inisibleTurns = 0;
-		this.isInvisible = null;
 	}
-	ability(){
+	useAbility(){
 		//go invisible
+		super.initiateAbility()
 
-		game[`player${game.whichPlayer}`].isInvisible = `invisible`
+		game[`player${game.whichPlayer}`].abilityActive = `invisible`
+		game[`player${game.whichPlayer}`].opacity = 0.3
 
 		const curPlay = game[`player${game.whichPlayer}`]
 		const board = $('#game-board').children()
