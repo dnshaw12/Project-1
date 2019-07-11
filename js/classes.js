@@ -42,7 +42,209 @@ class Player {
 	attack(e){
 		game.printBoard()
 		game.buttonsActive = false;
-		if ($($(this).children()[0]).hasClass('icon')) {
+
+		const board = $('#game-board').children()
+		const curPlay = game[`player${game.whichPlayer}`]
+
+		//get current players location
+		let currentLeft;
+		let currentTop
+		let currCol
+		let currRow
+
+		for (let i = 0; i < board.length; i++) {
+			if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
+				currCol = $(board[i]).data('columnNum')
+				currRow = $(board[i]).data('rowNum')
+				currentLeft = `${(currCol*10) - 10}%`;
+				currentTop = `${(currRow*10) - 10}%`;
+			};
+		}
+
+		// enemy location
+
+		let enemyCol = $(this).data('columnNum')
+		let enemyRow = $(this).data('rowNum')
+		let enemyLeft = `${(enemyCol*10) - 10}%`;
+		let enemyTop =  `${(enemyRow*10) - 10}%`;
+
+		//distination angle from right side
+
+		Math.degrees = function(radians) {
+		  	return radians * 180 / Math.PI;
+		};
+
+		const sideA = enemyCol - currCol;
+		const sideB = enemyRow - currRow;
+
+		let degrees;
+
+		if (sideA >= 0 && sideB >= 0 || sideA > 0 && sideB <= 0 || sideA === 0 && sideB <= 0) {
+			degrees = Math.degrees(Math.atan(sideB/sideA))
+		} else if (sideA < 0 && sideB <= 0 || sideA <= 0 && sideB >= 0) {
+			degrees = Math.degrees(Math.atan(sideB/sideA)) + 180
+		}
+
+		if (curPlay.class === 'Wizard') {
+			console.log('wizard animation');
+			const $fireball = $(`<img/>`)
+			$fireball.attr('src',curPlay.fireball)
+
+			$fireball.css({
+				'width': '10%',
+				'height': '10%',
+				'margin-top': currentTop,
+				'margin-left': currentLeft,
+				'transform':`rotate(${degrees}deg)`,
+				'z-index': '1'
+			})
+
+			$('#overlay').css('visibility','visible');
+
+			$('#overlay').append($fireball)
+
+			$fireball.animate({
+				'margin-top': enemyTop,
+				'margin-left': enemyLeft,
+			}, 1500,'easeInQuint', function(){
+				$fireball.attr('src',curPlay.fire)
+				$fireball.css('transform','rotate(0deg)')
+				$fireball.animate({
+					'opacity': '0'
+				},2000, function(){
+					$('#overlay').css('visibility','hidden');
+					$('#overlay').empty();
+					game.printBoard();
+					game.checkForWin()
+					game.checkTurnEnding()
+					game.buttonsActive = true;
+				})
+			})
+
+
+		} else if (curPlay.class === 'Fighter') {
+			console.log('fighter animation');
+			let fighterIcon;
+			for (let i = 0; i < board.length; i++){
+				if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
+					fighterIcon = $($(board[i]).children()[0]);
+				}
+			}
+
+			const $shield = $(`<img/>`)
+
+			$shield.attr('src',curPlay.icon)
+			console.log(curPlay.icon);
+			$shield.css({
+				'width': '10%',
+				'height': '10%',
+				'margin-top': currentTop,
+				'margin-left': currentLeft,
+				'transform':`rotate(${degrees - 90}deg)`
+			})
+
+			$('#overlay').css('visibility','visible');
+
+			$('#overlay').append($shield)
+
+			
+			fighterIcon.hide()
+
+			$shield.animate({
+				'margin-top': enemyTop,
+				'margin-left': enemyLeft,
+			}, 750, 'easeInElastic', function(){
+				$shield.css({
+					'transform':`rotate(0deg)`
+				})
+				$shield.attr('src',curPlay.pow)
+				$shield.animate({
+					'width': '10%',
+					'height': '10%',
+				},400, function(){
+					$shield.attr('src',curPlay.icon)
+					$shield.css({
+						'transform':`rotate(${degrees - 90}deg)`
+					})
+					$shield.animate({
+						'margin-top': currentTop,
+						'margin-left': currentLeft,
+						'rotate':`0deg`
+					},1000,'swing', function(){
+						fighterIcon.show()
+						$('#overlay').css('visibility','hidden');
+						$('#overlay').empty();
+						game.printBoard();
+						game.checkForWin()
+						game.checkTurnEnding()
+						game.buttonsActive = true;							
+					})	
+				})
+			})
+			
+		} else if (curPlay.class === 'Rogue') {
+			let rogueIcon;
+			for (let i = 0; i < board.length; i++){
+				if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
+					rogueIcon = $($(board[i]).children()[0]);
+				}
+			}
+
+			const $knife = $(`<img/>`)
+
+			$knife.attr('src',curPlay.icon)
+			$knife.css({
+				'width': '10%',
+				'height': '10%',
+				'margin-top': currentTop,
+				'margin-left': currentLeft,
+				'transform':`rotate(${degrees+225}deg)`,
+				'position': 'absolute'
+			})
+
+
+			const $blood = $(`<img/>`)
+
+			$blood.attr('src',curPlay.blood)
+			$blood.css({
+				'width': '10%',
+				'height': '10%',
+				'margin-top': enemyTop,
+				'margin-left': enemyLeft,
+				'z-index': '20',
+				'position': 'absolute'
+			})
+
+			$('#overlay').css('visibility','visible');
+			$('#overlay2').css('visibility','visible');
+
+			$('#overlay').append($knife)
+
+			rogueIcon.hide()
+
+			$knife.animate({
+				'margin-top': enemyTop,
+				'margin-left': enemyLeft,
+			},500,'easeInBack',function(){
+				$('#overlay2').append($blood)
+				$blood.animate({'opacity': '0'},2000,'easeInCubic')
+				$knife.animate({
+					'margin-top': currentTop,
+					'margin-left': currentLeft,
+				},2000,function(){
+					rogueIcon.show()
+					$('#overlay').css('visibility','hidden');
+					$('#overlay2').css('visibility','hidden');
+					$('#overlay').empty();
+					game.printBoard();
+					game.checkForWin()
+					game.checkTurnEnding()
+					game.buttonsActive = true;
+				})
+			})
+		}
+
+		if ($($(this).children()[0]).hasClass('icon')&& !$($(this).children()[0]).hasClass('invisible')) {
 
 			if (game[`player${$($(this).children()[0]).attr('id')}`].HP - game[`player${game.whichPlayer}`].damage < 0) {
 
@@ -51,210 +253,23 @@ class Player {
 				game[`player${$($(this).children()[0]).attr('id')}`].HP -= game[`player${game.whichPlayer}`].damage;
 				game.lastTurnDamage = game[`player${game.whichPlayer}`].damage;
 			}
+		} else if ($($(this).children()[0]).hasClass('icon') && $($(this).children()[0]).hasClass('invisible')) {
 
-			const board = $('#game-board').children()
-			const curPlay = game[`player${game.whichPlayer}`]
+			game.handleInvisible($($(this).children()[0]).attr('id'))
+			
+			if (game[`player${$($(this).children()[0]).attr('id')}`].HP - game[`player${game.whichPlayer}`].damage < 0) {
 
-			//get current players location
-			let currentLeft;
-			let currentTop
-			let currCol
-			let currRow
-
-			for (let i = 0; i < board.length; i++) {
-				if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
-					currCol = $(board[i]).data('columnNum')
-					currRow = $(board[i]).data('rowNum')
-					currentLeft = `${(currCol*10) - 10}%`;
-					currentTop = `${(currRow*10) - 10}%`;
-				};
+				game[`player${$($(this).children()[0]).attr('id')}`].HP = 0;
+			} else {
+				game[`player${$($(this).children()[0]).attr('id')}`].HP -= game[`player${game.whichPlayer}`].damage;
+				game.lastTurnDamage = game[`player${game.whichPlayer}`].damage;
 			}
-
-			// enemy location
-
-			let enemyCol = $(this).data('columnNum')
-			let enemyRow = $(this).data('rowNum')
-			let enemyLeft = `${(enemyCol*10) - 10}%`;
-			let enemyTop =  `${(enemyRow*10) - 10}%`;
-
-			//distination angle from right side
-
-			Math.degrees = function(radians) {
-			  	return radians * 180 / Math.PI;
-			};
-
-			const sideA = enemyCol - currCol;
-			const sideB = enemyRow - currRow;
-
-			let degrees;
-
-			if (sideA >= 0 && sideB >= 0 || sideA > 0 && sideB <= 0 || sideA === 0 && sideB <= 0) {
-				degrees = Math.degrees(Math.atan(sideB/sideA))
-			} else if (sideA < 0 && sideB <= 0 || sideA <= 0 && sideB >= 0) {
-				degrees = Math.degrees(Math.atan(sideB/sideA)) + 180
-			}
-
-			if (curPlay.class === 'Wizard') {
-				console.log('wizard animation');
-				const $fireball = $(`<img/>`)
-				$fireball.attr('src',curPlay.fireball)
-
-				$fireball.css({
-					'width': '10%',
-					'height': '10%',
-					'margin-top': currentTop,
-					'margin-left': currentLeft,
-					'transform':`rotate(${degrees}deg)`
-				})
-
-				$('#overlay').css('visibility','visible');
-
-				$('#overlay').append($fireball)
-
-				$fireball.animate({
-					'margin-top': enemyTop,
-					'margin-left': enemyLeft,
-				}, 1500,'easeInQuint', function(){
-					$fireball.attr('src',curPlay.fire)
-					$fireball.css('transform','rotate(0deg)')
-					$fireball.animate({
-						'opacity': '0'
-					},2000, function(){
-						$('#overlay').css('visibility','hidden');
-						$('#overlay').empty();
-						game.printBoard();
-						game.checkForWin()
-						game.checkTurnEnding()
-						game.buttonsActive = true;
-					})
-				})
-
-
-			} else if (curPlay.class === 'Fighter') {
-				console.log('fighter animation');
-				let fighterIcon;
-				for (let i = 0; i < board.length; i++){
-					if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
-						fighterIcon = $($(board[i]).children()[0]);
-					}
-				}
-
-				const $shield = $(`<img/>`)
-
-				$shield.attr('src',curPlay.icon)
-				console.log(curPlay.icon);
-				$shield.css({
-					'width': '10%',
-					'height': '10%',
-					'margin-top': currentTop,
-					'margin-left': currentLeft,
-					'transform':`rotate(${degrees - 90}deg)`
-				})
-
-				$('#overlay').css('visibility','visible');
-
-				$('#overlay').append($shield)
-
-				
-				fighterIcon.hide()
-
-				$shield.animate({
-					'margin-top': enemyTop,
-					'margin-left': enemyLeft,
-				}, 750, 'easeInElastic', function(){
-					$shield.css({
-						'transform':`rotate(0deg)`
-					})
-					$shield.attr('src',curPlay.pow)
-					$shield.animate({
-						'width': '10%',
-						'height': '10%',
-					},400, function(){
-						$shield.attr('src',curPlay.icon)
-						$shield.css({
-							'transform':`rotate(${degrees - 90}deg)`
-						})
-						$shield.animate({
-							'margin-top': currentTop,
-							'margin-left': currentLeft,
-							'rotate':`0deg`
-						},1000,'swing', function(){
-							fighterIcon.show()
-							$('#overlay').css('visibility','hidden');
-							$('#overlay').empty();
-							game.printBoard();
-							game.checkForWin()
-							game.checkTurnEnding()
-							game.buttonsActive = true;							
-						})	
-					})
-				})
-				
-			} else if (curPlay.class === 'Rogue') {
-				let rogueIcon;
-				for (let i = 0; i < board.length; i++){
-					if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
-						rogueIcon = $($(board[i]).children()[0]);
-					}
-				}
-
-				const $knife = $(`<img/>`)
-
-				$knife.attr('src',curPlay.icon)
-				$knife.css({
-					'width': '10%',
-					'height': '10%',
-					'margin-top': currentTop,
-					'margin-left': currentLeft,
-					'transform':`rotate(${degrees+225}deg)`,
-					'position': 'absolute'
-				})
-
-
-				const $blood = $(`<img/>`)
-
-				$blood.attr('src',curPlay.blood)
-				$blood.css({
-					'width': '10%',
-					'height': '10%',
-					'margin-top': enemyTop,
-					'margin-left': enemyLeft,
-					'z-index': '20',
-					'position': 'absolute'
-				})
-
-				$('#overlay').css('visibility','visible');
-
-				$('#overlay').append($knife)
-
-				rogueIcon.hide()
-
-				$knife.animate({
-					'margin-top': enemyTop,
-					'margin-left': enemyLeft,
-				},500,'easeInBack',function(){
-					$('#overlay').append($blood)
-					$blood.animate({'opacity': '0'},2000,'easeInCubic')
-					$knife.animate({
-						'margin-top': currentTop,
-						'margin-left': currentLeft,
-					},2000,function(){
-						rogueIcon.show()
-						$('#overlay').css('visibility','hidden');
-						$('#overlay').empty();
-						game.printBoard();
-						game.checkForWin()
-						game.checkTurnEnding()
-						game.buttonsActive = true;
-					})
-				})
-			}
-
-			game[`player${game.whichPlayer}`].attackUsed = true;
-			// game.printBoard();
-			// game.checkTurnEnding()
-			// game.checkForWin()
 		}
+
+		game[`player${game.whichPlayer}`].attackUsed = true;
+		// game.printBoard();
+		// game.checkTurnEnding()
+		// game.checkForWin()
 	}
 
 	move(e){
@@ -309,6 +324,7 @@ class Player {
 			})
 		})
 		game[`player${game.whichPlayer}`].moveUsed = true;
+		console.log('move');
 		game.printBoard()
 		game.checkForWin()
 		game.checkTurnEnding()

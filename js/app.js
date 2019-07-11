@@ -163,7 +163,7 @@ const game = {
 		for (let i = 0; i < board.length; i++) {
 			const $img = $($(board[i]).children()[0])
 			if ($img.hasClass('invisible') && parseInt($img.attr('id')) === this.whichPlayer) {
-				$img.css('opacity','0.5');
+				$img.css('opacity','0.3');
 			} else if ($img.hasClass('invisible') && parseInt($img.attr('id')) !== this.whichPlayer) {
 				$img.css('opacity','0')
 			}
@@ -231,6 +231,14 @@ const game = {
 								this[`player${game.whichPlayer}`].move(e)
 							})
 						}
+						if ($($(board[i]).children()[0]).hasClass('icon') && $($(board[i]).children()[0]).hasClass('invisible')) {
+								$(board[i]).addClass('moveSpace');
+								$(board[i]).on('click',(el)=>{
+									$('#message-box').text('You stepped on an invisible person!');
+									game.animateMessage();
+									this.handleInvisible($($(board[i]).children()[0]).attr('id'));
+								})
+							}
 					}
 				}
 
@@ -253,6 +261,12 @@ const game = {
 								$(board[i]).on('click',(el)=>{
 									const e = el.target
 									this[`player${game.whichPlayer}`].move(e)
+								})
+							}
+							if ($($(board[i]).children()[0]).hasClass('icon') && $($(board[i]).children()[0]).hasClass('invisible')) {
+								$(board[i]).addClass('moveSpace');
+								$(board[i]).on('click',(el)=>{
+									this.handleInvisible($($(board[i]).children()[0]).attr('id'));
 								})
 							}
 						}
@@ -309,6 +323,47 @@ const game = {
 			}
 		}
 		
+	},
+
+	handleInvisible(invisiblePlayer){
+		$('#message-box').text('You found an invisible person!');
+		this.animateMessage();
+		$unhide = this[`player${invisiblePlayer}`];
+		$unhide.isInvisible = null;
+
+
+		const curPlay = this[`player${invisiblePlayer}`]
+		const board = $('#game-board').children()
+
+		let currCol;
+		let currRow;
+		let currentLeft;
+		let currentTop;
+
+		for (let i = 0; i < board.length; i++) {
+			if (parseInt($($(board[i]).children()[0]).attr('id')) === $unhide.playerNum) {
+				currCol = $(board[i]).data('columnNum')
+				currRow = $(board[i]).data('rowNum')
+				currentLeft = `${(currCol*10) - 10}%`;
+				currentTop = `${(currRow*10) - 10}%`;
+			};
+		}
+
+		let icon;
+		for (let i = 0; i < board.length; i++){
+			if (parseInt($($(board[i]).children()[0]).attr('id')) === $unhide.playerNum) {
+				icon = $($(board[i]).children()[0]);
+			}
+		}
+		
+		icon.animate({
+			'opacity': '1',
+		}, 3000, function(){
+			$('#overlay').css('visibility','hidden');
+			$('#overlay').empty();
+			game.printBoard();
+			game.buttonsActive = true;							
+		})
 	},
 
 	checkTurnEnding(){

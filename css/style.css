@@ -63,6 +63,15 @@ footer {
 	visibility: hidden;
 }
 
+#overlay2 {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 80vh;
+	height: 80vh;
+	visibility: hidden;
+}
+
 .stat-bar {
 	text-align: center;
 	position: relative;
