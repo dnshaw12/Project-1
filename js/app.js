@@ -156,6 +156,16 @@ const game = {
 				$('#game-board').append($div)
 			})
 		})
+		for (let i = 1; i <= this.totalPlayers; i++){
+			$(`.p${i}Hidden`).css('visibility','hidden')
+
+			//use player current postion to set opacity to 0
+			//handle insisibility own function
+
+
+
+		}
+		$(`.p${this.whichPlayer}Hidden`).css('visibility','visible')
 		$('#game-board').css({'box-shadow': '10px 10px 5px black'})
 	},
 
@@ -303,11 +313,13 @@ const game = {
 			$('#game-board').css({'box-shadow': '0px 0px 0px black'})
 
 			// add player switch screen
+			const nextPlayer = game[`player${game.whichPlayer}`]
+
 			const $div = $(`<div></div>`)
 			const $button = $(`<button id="start-turn">Take Turn</button>`)
 			$div.addClass('turnSwitch')
-			$p = $(`<p>Turn ${this.turn}: It's ${curPlay.name} the ${curPlay.class}'s turn!</p>`)
-			$p2 = $(`<p>You took ${this.lastTurnDamage} damage!</p>`)
+			const $p = $(`<p>Turn ${this.turn}: It's ${nextPlayer.name} the ${nextPlayer.class}'s turn!</p>`)
+			const $p2 = $(`<p>You took ${this.lastTurnDamage} damage!</p>`)
 			$p.css({
 				'color': 'black',
 				'text-align': 'center',
