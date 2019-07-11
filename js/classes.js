@@ -88,6 +88,61 @@ class Player {
 			degrees = Math.degrees(Math.atan(sideB/sideA)) + 180
 		}
 
+
+	const calculateDamage = () => {
+
+		const $opponent = $($(this).children()[0])
+		const opponent = game[`player${$opponent.attr('id')}`]
+		if ($opponent.hasClass('icon')){
+
+			let $opponentHP = game[`player${$opponent.attr('id')}`].HP
+			const $currPlayerDamage = game[`player${game.whichPlayer}`].damage
+
+			if (!$opponent.hasClass('shielded')) {
+				if (!$opponent.hasClass('invisible')) {
+
+					if ($opponentHP - $currPlayerDamage < 0) {
+						console.log(1);
+						opponent.HP = 0;
+						console.log($opponentHP);
+					} else {
+						opponent.HP -= $currPlayerDamage;
+						game.lastTurnDamage = $currPlayerDamage;
+						console.log(1);
+					}
+				} else if ($opponent.hasClass('invisible')) {
+
+					game.handleInvisible($opponent.attr('id'))
+					
+					if ($opponentHP - $currPlayerDamage < 0) {
+						console.log(1);
+						opponent.HP = 0;
+					} else {
+						opponent.HP -= $currPlayerDamage;
+						game.lastTurnDamage = $currPlayerDamage;
+						console.log(1);
+					}
+				}
+			} else {
+
+				if ($opponentHP - $currPlayerDamage/2 < 0) {
+
+					console.log(1);
+					opponent.HP = 0;
+				} else {
+					console.log(1);
+					opponent.HP -= $currPlayerDamage/2;
+					game.lastTurnDamage = $currPlayerDamage/2;
+				}
+			}
+		} else {
+			$('#message-box').text('You missed!')
+			game.animateMessage()
+			console.log(1);
+		}		
+	}
+
+
 		if (curPlay.class === 'Wizard') {
 			console.log('wizard animation');
 			const $fireball = $(`<img/>`)
@@ -118,9 +173,12 @@ class Player {
 					$('#overlay').css('visibility','hidden');
 					$('#overlay').empty();
 					game.printBoard();
+					game.buttonsActive = true;
+
+					calculateDamage()
+
 					game.checkForWin()
 					game.checkTurnEnding()
-					game.buttonsActive = true;
 				})
 			})
 
@@ -178,9 +236,12 @@ class Player {
 						$('#overlay').css('visibility','hidden');
 						$('#overlay').empty();
 						game.printBoard();
+						game.buttonsActive = true;	
+
+						calculateDamage()
+
 						game.checkForWin()
 						game.checkTurnEnding()
-						game.buttonsActive = true;							
 					})	
 				})
 			})
@@ -241,48 +302,17 @@ class Player {
 					$('#overlay2').css('visibility','hidden');
 					$('#overlay').empty();
 					game.printBoard();
+					game.buttonsActive = true;
+
+					calculateDamage()
+
 					game.checkForWin()
 					game.checkTurnEnding()
-					game.buttonsActive = true;
 				})
 			})
 		}
 
-		if ($($(this).children()[0]).hasClass('icon') && !$($(this).children()[0]).hasClass('shielded')) {
-			if ($($(this).children()[0]).hasClass('icon')&& !$($(this).children()[0]).hasClass('invisible')) {
 
-				if (game[`player${$($(this).children()[0]).attr('id')}`].HP - game[`player${game.whichPlayer}`].damage < 0) {
-
-					game[`player${$($(this).children()[0]).attr('id')}`].HP = 0;
-				} else {
-					game[`player${$($(this).children()[0]).attr('id')}`].HP -= game[`player${game.whichPlayer}`].damage;
-					game.lastTurnDamage = game[`player${game.whichPlayer}`].damage;
-				}
-			} else if ($($(this).children()[0]).hasClass('icon') && $($(this).children()[0]).hasClass('invisible')) {
-
-				game.handleInvisible($($(this).children()[0]).attr('id'))
-				
-				if (game[`player${$($(this).children()[0]).attr('id')}`].HP - game[`player${game.whichPlayer}`].damage < 0) {
-
-					game[`player${$($(this).children()[0]).attr('id')}`].HP = 0;
-				} else {
-					game[`player${$($(this).children()[0]).attr('id')}`].HP -= game[`player${game.whichPlayer}`].damage;
-					game.lastTurnDamage = game[`player${game.whichPlayer}`].damage;
-				}
-			} else {
-				$('#message-box').text('You missed!')
-				game.animateMessage()
-			}
-		} else if ($($(this).children()[0]).hasClass('icon') && $($(this).children()[0]).hasClass('shielded')) {
-
-			if (game[`player${$($(this).children()[0]).attr('id')}`].HP - game[`player${game.whichPlayer}`].damage < 0) {
-
-				game[`player${$($(this).children()[0]).attr('id')}`].HP = 0;
-			} else {
-				game[`player${$($(this).children()[0]).attr('id')}`].HP -= game[`player${game.whichPlayer}`].damage/2;
-				game.lastTurnDamage = game[`player${game.whichPlayer}`].damage/2;
-			}
-		}
 
 
 		game[`player${game.whichPlayer}`].attackUsed = true;
@@ -449,9 +479,9 @@ class Fighter extends Player {
 			$('#overlay').css('visibility','hidden');
 			$('#overlay').empty();
 			game.printBoard();
+			game.buttonsActive = true;							
 			game.checkForWin()
 			game.checkTurnEnding()
-			game.buttonsActive = true;							
 		})
 
 	}
@@ -465,7 +495,7 @@ class Wizard extends Player {
 		this.originalSpeed = 3;
 		this.speed = this.originalSpeed;
 		this.damage = 5;
-		this.range = 40;
+		this.range = 5;
 		this.icon = 'images/wiz-icon.png'
 		this.fireball = 'images/fireball.gif'
 		this.fire = 'images/fire.gif'
@@ -521,9 +551,9 @@ class Wizard extends Player {
 				$('#overlay').css('visibility','hidden');
 				$('#overlay').empty();
 				game.printBoard();
+				game.buttonsActive = true;							
 				game.checkForWin()
 				game.checkTurnEnding()
-				game.buttonsActive = true;							
 			})
 		})	
 	}
@@ -533,7 +563,7 @@ class Rogue extends Player {
 	constructor(name, playerNum){
 		super(name, playerNum);
 		this.class = 'Rogue';
-		this.HP = 12;
+		this.HP = 13;
 		this.speed = 5;
 		this.damage = 4;
 		this.range = 1;
@@ -596,9 +626,9 @@ class Rogue extends Player {
 			$('#overlay').css('visibility','hidden');
 			$('#overlay').empty();
 			game.printBoard();
+			game.buttonsActive = true;							
 			game.checkForWin()
 			game.checkTurnEnding()
-			game.buttonsActive = true;							
 		})	
 	}
 }

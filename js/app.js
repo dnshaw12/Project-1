@@ -22,7 +22,7 @@ const game = {
 			} else if (game.player1Class === 'rogue') {
 				game.player1 = new Rogue($('#p1Input').val(),1)
 			}
-			$('#p1StartScreen').remove()
+			$('#p1StartScreen').css('visibility','hidden')
 			$('#message-box').text('')
 		} 
 	},
@@ -39,7 +39,7 @@ const game = {
 			} else if (game.player2Class === 'rogue') {
 				game.player2 = new Rogue($('#p2Input').val(),2)
 			}
-			$('#p2StartScreen').remove()
+			$('#p2StartScreen').css('visibility','hidden')
 			$('#message-box').text('')
 			game.startGame()
 		} 
@@ -102,7 +102,7 @@ const game = {
 	},
 
 	printBoard(){
-		// console.log('new board printed');
+		console.log('new board printed');
 		$('#game-board').empty()
 		this.board.forEach((row, i) =>{
 			row.forEach((sq, j) =>{
@@ -171,7 +171,6 @@ const game = {
 
 
 		for (let i = 1; i <= this.totalPlayers; i++){
-			$(`.p${i}Hidden`).css('visibility','hidden')
 
 			//use player current postion to set opacity to 0
 			//handle insisibility own function
@@ -186,7 +185,6 @@ const game = {
 	startGame(){
 		this.makeBoard();
 		this.updateStats()
-		$('#p1HP').on('click',game.player1.ability)
 
 	},
 
@@ -369,7 +367,17 @@ const game = {
 
 	checkTurnEnding(){
 		const curPlay = game[`player${game.whichPlayer}`];
-		if (curPlay.moveUsed === true && curPlay. attackUsed === true) {
+
+		let totalDead = 0;
+		for (let i = 1; i <= this.totalPlayers; i++){
+			const player = this[`player${i}`]
+			if (player.HP === 0 && player.isAlive === true) {
+				player.isAlive = false;
+				totalDead++;
+			}	
+		}
+		console.log(totalDead);
+		if (curPlay.moveUsed === true && curPlay. attackUsed === true && totalDead !== this.totalPlayers - 1 ) {
 			$(`.p${game.whichPlayer}Hidden`).css('visibility','hidden')
 			if (this.whichPlayer !== this.totalPlayers) {
 				this.whichPlayer++;
@@ -421,6 +429,7 @@ const game = {
 			}
 			if (curPlay.abilityTurns > 2) {
 				curPlay.abilityActive = null;
+				curPlay.opacity = 1;
 				if (curPlay.class === 'Fighter') {
 					curPlay.icon = 'images/fighter-icon.png'
 				}
@@ -465,16 +474,24 @@ const game = {
 			$('#game-board').css({'box-shadow': '0px 0px 0px black'})
 			$(`.stats`).css('visibility','visible')
 			this.buttonsActive = false;
-			const $div = $(`<div></div>`)
+			const $div = $(`<div id='end-game'></div>`)
 			$div.addClass('endScreen')
 			$p = $(`<p>${winner.name} the ${winner.class} Wins!</p>`)
+			$button = $(`<button id='reset'>Play Again!</button>`)
+			$div.css({
+
+			})
 			$p.css({
 				'color': 'black',
 				'text-align': 'center',
 				'font-size': '5vh',
 
 			})
+			$button.on('click', ()=>{
+				this.resetGame()
+			})
 			$div.append($p);
+			$div.append($button);
 			$('#game-board').empty();
 			$('#game-board').append($div);
 		}
@@ -491,6 +508,21 @@ const game = {
 				clearInterval(timer)
 			}
 		},1000)
+	},
+
+	resetGame(){
+		for (let i = 1; i <= this.totalPlayers; i++){
+			this[`player${i}`] = null
+			$(`#p${i}StartScreen`).css('visibility','visible')
+			$(`.p${i}Hidden`).css('visibility','hidden')
+		}
+		this.board = [];
+		$('#end-game').remove();
+		$('input').val('')
+		this.turn = 1;
+		this.whichPlayer = 1;
+		this.buttonsActive = true;
+
 	}
 }
 
@@ -537,7 +569,7 @@ $('.abilityButton').on('click',()=>{
 	if (game.buttonsActive === true && game[`player${game.whichPlayer}`].abilityUsed === false) {
 		game[`player${game.whichPlayer}`].useAbility()
 		game.printBoard()
-	} else {
+	} else if (game.buttonsActive !== true && game[`player${game.whichPlayer}`].abilityUsed === false) {
 		$('#message-box').text('You have already used your ability this game!')
 		game.animateMessage()
 	}

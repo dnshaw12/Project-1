@@ -201,7 +201,7 @@ button {
 	height: 80vh;
 	background-color: rgb(56, 2, 2);
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	justify-content: space-evenly;
 	align-items: center;
 	z-index: 3;
@@ -240,4 +240,8 @@ button:hover {
 
 h2 {
 	margin: 0px;
+}
+
+#reset {
+	width: 30%;
 }
