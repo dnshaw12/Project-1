@@ -5,6 +5,7 @@ body {
 	margin: 0;
 	overflow-y: hidden;
 	font-family: 'Almendra', serif;
+	position: relative;
 }
 
 header {
@@ -35,6 +36,25 @@ footer {
 	text-align: center;
 	padding: 2vh;
 	z-index: 0;
+}
+
+.popup {
+	position: absolute;
+	top: 10%;
+	left: 25%;
+	height:  45%;
+	width: 50%;
+	background-image: url("http://www.transparentpng.com/thumb/scroll/scroll-png-transparent-image--6.png");
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	visibility: hidden;
+	z-index: 200;
+}
+
+#popupText {
+	padding: 15%;
+	text-align: center;
 }
 
 #demo {
@@ -194,6 +214,13 @@ button {
 }
 @keyframes attackHighlight {
 	50% {background-color: red;}
+}
+
+.float {
+	animation: float 2s infinite;
+}
+@keyframes float {
+	50% {top: 12%;}
 }
 
 .endScreen {

@@ -74,35 +74,28 @@ class Player {
 				if (!$opponent.hasClass('invisible')) {
 
 					if ($opponentHP - $currPlayerDamage < 0) {
-						console.log(1);
 						opponent.HP = 0;
-						console.log($opponentHP);
 					} else {
 						opponent.HP -= $currPlayerDamage;
 						game.lastTurnDamage = $currPlayerDamage;
-						console.log(1);
 					}
 				} else if ($opponent.hasClass('invisible')) {
 
 					game.handleInvisible($opponent.attr('id'))
 					
 					if ($opponentHP - $currPlayerDamage < 0) {
-						console.log(1);
 						opponent.HP = 0;
 					} else {
 						opponent.HP -= $currPlayerDamage;
 						game.lastTurnDamage = $currPlayerDamage;
-						console.log(1);
 					}
 				}
 			} else {
 
 				if ($opponentHP - $currPlayerDamage/2 < 0) {
 
-					console.log(1);
 					opponent.HP = 0;
 				} else {
-					console.log(1);
 					opponent.HP -= $currPlayerDamage/2;
 					game.lastTurnDamage = $currPlayerDamage/2;
 				}
@@ -110,13 +103,11 @@ class Player {
 		} else {
 			$('#message-box').text('You missed!')
 			game.animateMessage()
-			console.log(1);
 		}		
 	}
 
 
 		if (curPlay.class === 'Wizard') {
-			console.log('wizard animation');
 			const $fireball = $(`<img/>`)
 			$fireball.attr('src',curPlay.fireball)
 
@@ -156,7 +147,6 @@ class Player {
 
 
 		} else if (curPlay.class === 'Fighter') {
-			console.log('fighter animation');
 			let fighterIcon;
 			for (let i = 0; i < board.length; i++){
 				if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
@@ -167,7 +157,6 @@ class Player {
 			const $shield = $(`<img/>`)
 
 			$shield.attr('src',curPlay.icon)
-			console.log(curPlay.icon);
 			$shield.css({
 				'width': '10%',
 				'height': '10%',
@@ -326,7 +315,6 @@ class Player {
 
 		if (game[`player${game.whichPlayer}`].abilityActive === 'teleport') {
 			game[`player${game.whichPlayer}`].abilityTurns++
-			console.log('ability teleport',game[`player${game.whichPlayer}`].abilityTurns);
 
 			$icon.animate({
 				'opacity': '0'
@@ -401,8 +389,9 @@ class Fighter extends Player {
 		this.range = 1;
 		this.icon = 'images/fighter-icon.png'
 		this.pow = 'images/pow.png'
-		this.shielded = 'images/fighter-icon-shield.png'
-	}
+		this.shielded = 'images/fighter-icon-shield.png'  
+		this.abilityDesc = "Shield Up: Take half damage from any attack on your next 3 turns!"
+	} 
 	useAbility() {
 		super.initiateAbility()
 		/// Shield Up (helf damage for 2 turns)
@@ -441,12 +430,9 @@ class Fighter extends Player {
 
 		$('#overlay').append($shield)
 
-		console.log(curPlay);
-
 		$shield.animate({
 			'opacity': '1'
 		}, 2000,'easeOutBounce', function(){
-			console.log('animation shield');
 			curPlay.icon = 'images/fighter-icon-shield.png'
 			$('#overlay').css('visibility','hidden');
 			$('#overlay').empty();
@@ -472,6 +458,7 @@ class Wizard extends Player {
 		this.fireball = 'images/fireball.gif'
 		this.fire = 'images/fire.gif'
 		this.teleport = 'images/teleport.gif'
+		this.abilityDesc = "Teleport: You will be able to move to any tile on your next 2 moves!"
 	}
 	useAbility() {
 		super.initiateAbility()
@@ -499,7 +486,6 @@ class Wizard extends Player {
 		const $teleport = $(`<img/>`)
 
 		$teleport.attr('src',curPlay.teleport)
-		console.log(curPlay.icon);
 		$teleport.css({
 			'width': '10%',
 			'height': '10%',
@@ -541,6 +527,7 @@ class Rogue extends Player {
 		this.range = 1;
 		this.icon = 'images/rogue-icon.png';
 		this.blood = 'images/blood.png'
+		this.abilityDesc = "Invisibility: Become invisible to your opponent for the next 3 rounds!"
 	}
 	useAbility(){
 		//go invisible
@@ -576,7 +563,6 @@ class Rogue extends Player {
 		const $knife = $(`<img/>`)
 
 		$knife.attr('src',curPlay.icon)
-		console.log(curPlay.icon);
 		$knife.css({
 			'width': '10%',
 			'height': '10%',

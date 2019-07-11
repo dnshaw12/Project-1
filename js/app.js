@@ -9,6 +9,11 @@ const game = {
 	buttonsActive: true,
 	lastTurnDamage: 0,
 	board:[],
+	classDesc: {
+		rogue: "Fast and silent fighter. Moves quickly but less damage. Ability: Invisibility",
+		fighter: "Studry and persistent combatant. Well rounded stats. Ability: Shield Up",
+		wizard: "Powerful magic user. Has ranged attack but slow moving. Ability: Teleport"
+	},
 
 	makePlayer1(){
 		if ($('#p1Input').val() === '' || game.player1Class === null) {
@@ -102,7 +107,6 @@ const game = {
 	},
 
 	printBoard(){
-		console.log('new board printed');
 		$('#game-board').empty()
 		this.board.forEach((row, i) =>{
 			row.forEach((sq, j) =>{
@@ -128,26 +132,21 @@ const game = {
 				const $icon1 = $(`<img src="${this.player1.icon}" class='icon ${this.player1.abilityActive}' id=1 height="100%" width="100%">`)
 				const $icon2 = $(`<img src="${this.player2.icon}" class='icon ${this.player2.abilityActive}' id=2 height="100%" width="100%">`)
 
-				// $div.text(`${j+1}/${i+1}`)
 				//re print the icons
 				if (sq.player === 1) {
-					// console.log($div);
 					$div.append($icon1);
 					this.player1.currentPosition = $div
 					$div.on('click',(e) => {
 
-						// this.printBoard()
 						this.highlightMoves(e.currentTarget);
 
 
 					})
 				} else if (sq.player === 2) {
-					// console.log(sq.player);
 					$div.append($icon2);
 					this.player2.currentPosition = $div
 					$div.on('click',(e) => {
 
-						// this.printBoard()
 						this.highlightMoves(e.currentTarget);
 
 
@@ -199,7 +198,6 @@ const game = {
 	},
 
 	highlightMoves(e){
-		// console.log(this);
 
 		const curPlay = game[`player${game.whichPlayer}`]
 
@@ -221,9 +219,7 @@ const game = {
 						$(board[i]).attr('data-row-num') === rowNum && $(board[i]).attr('data-column-num') >= parseInt(colNum) - curPlay.speed && $(board[i]).attr('data-column-num') < parseInt(colNum)) {
 
 						if (!$($(board[i]).children()[0]).hasClass('icon')) {
-							// console.log($($(board[i]).children()[0]).attr('class'),'--',board[i]);
 							$(board[i]).addClass('moveSpace')
-							// console.log(curPlay);
 							$(board[i]).on('click',(el)=>{
 								const e = el.target
 								this[`player${game.whichPlayer}`].move(e)
@@ -253,9 +249,7 @@ const game = {
 							$(board[i]).attr('data-column-num') == parseInt(colNum) - j && $(board[i]).attr('data-row-num') <= parseInt(rowNum) + curPlay.speed - j && $(board[i]).attr('data-row-num') > parseInt(rowNum)){
 
 							if (!$($(board[i]).children()[0]).hasClass('icon')) {
-								// console.log($($(board[i]).children()[0]).attr('class'),'--',board[i]);
 								$(board[i]).addClass('moveSpace');
-								// console.log(curPlay);
 								$(board[i]).on('click',(el)=>{
 									const e = el.target
 									this[`player${game.whichPlayer}`].move(e)
@@ -375,7 +369,6 @@ const game = {
 				totalDead++;
 			}	
 		}
-		console.log(totalDead);
 		if (curPlay.moveUsed === true && curPlay. attackUsed === true && totalDead !== this.totalPlayers - 1 ) {
 
 			$(`.p${game.whichPlayer}Hidden`).css('visibility','hidden')
@@ -386,22 +379,11 @@ const game = {
 				this.whichPlayer = 1;
 				this.turn++;
 			}
-			console.log(this.whichPlayer);
 			this.buttonsActive = false;
 			curPlay.moveUsed = false;
 			curPlay.attackUsed = false;
 			$('#game-board').css({'box-shadow': '0px 0px 0px black'})
 
-<<<<<<< HEAD
-			const nextPlayer = game[`player${game.whichPlayer}`]
-
-			const $p = $(`<p>Turn ${this.turn}: It's ${nextPlayer.name} the ${nextPlayer.class}'s turn!</p>`)
-			const $p2 = $(`<p>You took ${this.lastTurnDamage} damage!</p>`)
-
-			const $div = $(`<div></div>`)
-			const $button = $(`<button id="start-turn">Take Turn</button>`)
-			$div.addClass('turnSwitch')
-=======
 			// add player switch screen
 			const nextPlayer = game[`player${game.whichPlayer}`]
 
@@ -410,7 +392,6 @@ const game = {
 			$div.addClass('turnSwitch')
 			const $p = $(`<p>Turn ${this.turn}: It's ${nextPlayer.name} the ${nextPlayer.class}'s turn!</p>`)
 			const $p2 = $(`<p>You took ${this.lastTurnDamage} damage!</p>`)
->>>>>>> abilities
 			$p.css({
 				'color': 'black',
 				'text-align': 'center',
@@ -433,8 +414,6 @@ const game = {
 
 			if (curPlay.abilityActive !== null && curPlay.abilityActive !== 'teleport') {
 				curPlay.abilityTurns++
-				console.log(curPlay);
-				console.log('ability counter',curPlay.abilityTurns);
 			}
 			if (curPlay.abilityActive === 'teleport' && curPlay.abilityTurns === 2) {
 				curPlay.abilityActive = null;
@@ -447,12 +426,6 @@ const game = {
 					curPlay.icon = 'images/fighter-icon.png'
 				}
 			}
-
-
-			// add player switch screen
-
-
-			// console.log(`it is now player${game.whichPlayer} turn!`);
 			
 			$('#message-box').text('')
 			this.lastTurnDamage = 0;
@@ -460,7 +433,6 @@ const game = {
 	},
 
 	passTurn(){
-		console.log('pass');
 		const curPlay = game[`player${game.whichPlayer}`];
 		curPlay.moveUsed = true;
 		curPlay.attackUsed = true;
@@ -517,7 +489,6 @@ const game = {
 		$('#message-box').addClass('messageAnimate')
 		let time = 0;
 		const timer = setInterval(()=>{
-			// console.log(time);
 			time++;
 			if (time === 6) {
 				$('#message-box').removeClass('messageAnimate')
@@ -555,9 +526,7 @@ $('#p1Buttons').on('click',(e)=>{
 $('#p1StartButton').on('click',game.makePlayer1)
 
 $('#p2Buttons').on('click',(e)=>{
-	// console.log(e.target);
 	game.player2Class = $(e.target).attr('id');
-	// console.log(game.player2Class);
 	$('button').css({
 		'color': 'black'
 	})
@@ -589,6 +558,24 @@ $('.abilityButton').on('click',()=>{
 		$('#message-box').text('You have already used your ability this game!')
 		game.animateMessage()
 	}
+})
+
+$('.classSelector').hover( (e) => {
+	$('#popupText').text(game.classDesc[e.target.id])
+	$('.popup').css({'visibility':'visible'})
+})
+
+$('.classSelector').mouseout( (e) => {
+	$('.popup').css({'visibility':'hidden'})
+})
+
+$('.abilityButton').hover( (e) => {
+	$('#popupText').text(game[`player${game.whichPlayer}`].abilityDesc)
+	$('.popup').css({'visibility':'visible'})
+})
+
+$('.abilityButton').mouseout( (e) => {
+	$('.popup').css({'visibility':'hidden'})
 })
 
 
