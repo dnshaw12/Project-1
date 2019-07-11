@@ -286,9 +286,6 @@ class Player {
 
 
 		game[`player${game.whichPlayer}`].attackUsed = true;
-		// game.printBoard();
-		// game.checkTurnEnding()
-		// game.checkForWin()
 	}
 
 	move(e){
@@ -325,30 +322,65 @@ class Player {
 
 		$('#overlay').append($icon)
 
+		if (game[`player${game.whichPlayer}`].abilityActive === 'teleport') {
+			game[`player${game.whichPlayer}`].abilityTurns++
+			console.log('ability teleport',game[`player${game.whichPlayer}`].abilityTurns);
+
+			$icon.animate({
+				'opacity': '0'
+			}, 500, ()=>{
+				$icon.animate({
+					'margin-top': destinationTop,
+					'margin-left': destinationLeft
+				}, 500, () => {
+					$icon.animate({
+						'opacity': '1'
+					}, 1000, () => {
+						$('#overlay').css('visibility','hidden');
+						$('#overlay').empty();
+						game.buttonsActive = true;
+						game.board.forEach((row) => {
+							row.forEach((sq) => {
+
+								if ($(e).attr('id') == sq.id) {
+									sq.player = game.whichPlayer;
+
+								}
+							})
+						})
+					game[`player${game.whichPlayer}`].moveUsed = true;
+					game.printBoard()
+					game.checkForWin()
+					game.checkTurnEnding()
+					})
+				})
+			})
+
+		} else {
+			$icon.animate({
+				'margin-top': destinationTop,
+				'margin-left': destinationLeft,
+			}, 1500, ()=>{
+				$('#overlay').css('visibility','hidden');
+				$('#overlay').empty();
+				game.buttonsActive = true;
+				game.board.forEach((row) => {
+					row.forEach((sq) => {
+
+						if ($(e).attr('id') == sq.id) {
+							sq.player = game.whichPlayer;
+						}
+					})
+				})
+			game[`player${game.whichPlayer}`].moveUsed = true;
+			game.printBoard()
+			game.checkForWin()
+			game.checkTurnEnding()
+			})		
+		}
+		
 		// custom class animations
 
-		$icon.animate({
-			'margin-top': destinationTop,
-			'margin-left': destinationLeft,
-			'transform': 'rotate (360deg)'
-		}, 1500, ()=>{
-			$('#overlay').css('visibility','hidden');
-			$('#overlay').empty();
-			game.buttonsActive = true;
-			game.board.forEach((row) => {
-			row.forEach((sq) => {
-
-				if ($(e).attr('id') == sq.id) {
-					sq.player = game.whichPlayer;
-				}
-			})
-		})
-		game[`player${game.whichPlayer}`].moveUsed = true;
-		console.log('move');
-		game.printBoard()
-		game.checkForWin()
-		game.checkTurnEnding()
-		})		
 
 	}
 
@@ -392,13 +424,6 @@ class Fighter extends Player {
 			};
 		}
 
-		let icon;
-		for (let i = 0; i < board.length; i++){
-			if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
-				icon = $($(board[i]).children()[0]);
-			}
-		}
-
 		const $shield = $(`<img/>`)
 
 		$shield.attr('src',curPlay.shielded)
@@ -437,17 +462,70 @@ class Wizard extends Player {
 		super(name, playerNum);
 		this.class = 'Wizard';
 		this.HP = 15;
-		this.speed = 3;
+		this.originalSpeed = 3;
+		this.speed = this.originalSpeed;
 		this.damage = 5;
 		this.range = 40;
 		this.icon = 'images/wiz-icon.png'
 		this.fireball = 'images/fireball.gif'
 		this.fire = 'images/fire.gif'
+		this.teleport = 'images/teleport.gif'
 	}
 	useAbility() {
 		super.initiateAbility()
-		/// 
+		/// teleport
+		game[`player${game.whichPlayer}`].abilityActive = `teleport`
+		game[`player${game.whichPlayer}`].speed = 20;
 
+		const curPlay = game[`player${game.whichPlayer}`]
+		const board = $('#game-board').children()
+
+		let currCol;
+		let currRow;
+		let currentLeft;
+		let currentTop;
+
+		for (let i = 0; i < board.length; i++) {
+			if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
+				currCol = $(board[i]).data('columnNum')
+				currRow = $(board[i]).data('rowNum')
+				currentLeft = `${(currCol*10) - 10}%`;
+				currentTop = `${(currRow*10) - 10}%`;
+			};
+		}
+
+		const $teleport = $(`<img/>`)
+
+		$teleport.attr('src',curPlay.teleport)
+		console.log(curPlay.icon);
+		$teleport.css({
+			'width': '10%',
+			'height': '10%',
+			'margin-top': currentTop,
+			'margin-left': currentLeft,
+			'opacity': '0',
+		})
+
+		$('#overlay').css('visibility','visible');
+
+		$('#overlay').append($teleport)
+
+		
+
+		$teleport.animate({
+			'opacity': '1',
+		}, 1000, function(){
+			$teleport.animate({
+				'opacity': '0',
+			}, 1000,function(){
+				$('#overlay').css('visibility','hidden');
+				$('#overlay').empty();
+				game.printBoard();
+				game.checkForWin()
+				game.checkTurnEnding()
+				game.buttonsActive = true;							
+			})
+		})	
 	}
 }
 
@@ -456,9 +534,9 @@ class Rogue extends Player {
 		super(name, playerNum);
 		this.class = 'Rogue';
 		this.HP = 12;
-		this.speed = 50;
+		this.speed = 5;
 		this.damage = 4;
-		this.range = 100;
+		this.range = 1;
 		this.icon = 'images/rogue-icon.png';
 		this.blood = 'images/blood.png'
 	}

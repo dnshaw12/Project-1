@@ -410,9 +410,14 @@ const game = {
 			$('#game-board').empty();
 			$('#game-board').append($div);
 
-			if (curPlay.abilityActive !== null) {
+			if (curPlay.abilityActive !== null && curPlay.abilityActive !== 'teleport') {
 				curPlay.abilityTurns++
+				console.log(curPlay);
 				console.log('ability counter',curPlay.abilityTurns);
+			}
+			if (curPlay.abilityActive === 'teleport' && curPlay.abilityTurns === 2) {
+				curPlay.abilityActive = null;
+				curPlay.speed = curPlay.originalSpeed;
 			}
 			if (curPlay.abilityTurns > 2) {
 				curPlay.abilityActive = null;
