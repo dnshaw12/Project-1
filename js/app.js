@@ -16,11 +16,11 @@ const game = {
 			game.animateMessage();
 		} else {
 			if (game.player1Class === 'fighter') {
-				game.player1 = new Fighter($('#p1Input').val())
+				game.player1 = new Fighter($('#p1Input').val(),1)
 			} else if (game.player1Class === 'wizard') {
-				game.player1 = new Wizard($('#p1Input').val())
+				game.player1 = new Wizard($('#p1Input').val(),1)
 			} else if (game.player1Class === 'rogue') {
-				game.player1 = new Rogue($('#p1Input').val())
+				game.player1 = new Rogue($('#p1Input').val(),1)
 			}
 			$('#p1StartScreen').remove()
 			$('#message-box').text('')
@@ -33,11 +33,11 @@ const game = {
 			game.animateMessage();
 		} else {
 			if (game.player2Class === 'fighter') {
-				game.player2 = new Fighter($('#p2Input').val())
+				game.player2 = new Fighter($('#p2Input').val(),2)
 			} else if (game.player2Class === 'wizard') {
-				game.player2 = new Wizard($('#p2Input').val())
+				game.player2 = new Wizard($('#p2Input').val(),2)
 			} else if (game.player2Class === 'rogue') {
-				game.player2 = new Rogue($('#p2Input').val())
+				game.player2 = new Rogue($('#p2Input').val(),2)
 			}
 			$('#p2StartScreen').remove()
 			$('#message-box').text('')
@@ -156,6 +156,20 @@ const game = {
 				$('#game-board').append($div)
 			})
 		})
+
+		//check for invisibility and set opacity
+
+		const board = $('#game-board').children()
+		for (let i = 0; i < board.length; i++) {
+			const $img = $($(board[i]).children()[0])
+			if ($img.hasClass('invisible') && parseInt($img.attr('id')) === this.whichPlayer) {
+				$img.css('opacity','0.5');
+			} else if ($img.hasClass('invisible') && parseInt($img.attr('id')) !== this.whichPlayer) {
+				$img.css('opacity','0')
+			}
+		}
+
+
 		for (let i = 1; i <= this.totalPlayers; i++){
 			$(`.p${i}Hidden`).css('visibility','hidden')
 
@@ -208,7 +222,7 @@ const game = {
 
 						$(board[i]).attr('data-row-num') === rowNum && $(board[i]).attr('data-column-num') >= parseInt(colNum) - curPlay.speed && $(board[i]).attr('data-column-num') < parseInt(colNum)) {
 
-						if ($($(board[i]).children()[0]).attr('class') !== 'icon') {
+						if (!$($(board[i]).children()[0]).hasClass('icon')) {
 							// console.log($($(board[i]).children()[0]).attr('class'),'--',board[i]);
 							$(board[i]).addClass('moveSpace')
 							// console.log(curPlay);
@@ -232,7 +246,7 @@ const game = {
 
 							$(board[i]).attr('data-column-num') == parseInt(colNum) - j && $(board[i]).attr('data-row-num') <= parseInt(rowNum) + curPlay.speed - j && $(board[i]).attr('data-row-num') > parseInt(rowNum)){
 
-							if ($($(board[i]).children()[0]).attr('class') !== 'icon') {
+							if (!$($(board[i]).children()[0]).hasClass('icon')) {
 								// console.log($($(board[i]).children()[0]).attr('class'),'--',board[i]);
 								$(board[i]).addClass('moveSpace');
 								// console.log(curPlay);
@@ -357,6 +371,7 @@ const game = {
 	},
 
 	passTurn(){
+		console.log('pass');
 		const curPlay = game[`player${game.whichPlayer}`];
 		curPlay.moveUsed = true;
 		curPlay.attackUsed = true;
@@ -451,6 +466,17 @@ $('.attackButton').on('click',() =>{
 $('.passButton').on('click',()=>{
 	if (game.buttonsActive === true) {
 		game.passTurn()
+	}
+})
+
+$('.abilityButton').on('click',()=>{
+	if (game.buttonsActive === true && game[`player${game.whichPlayer}`].abilityUsed === false) {
+		game[`player${game.whichPlayer}`].ability()
+		game.printBoard()
+		game[`player${game.whichPlayer}`].abilityUsed = true;
+	} else {
+		$('#message-box').text('You have already used your ability this game!')
+		game.animateMessage()
 	}
 })
 

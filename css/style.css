@@ -34,6 +34,7 @@ footer {
 	width: 100%;
 	text-align: center;
 	padding: 2vh;
+	z-index: 0;
 }
 
 #demo {
@@ -77,6 +78,7 @@ footer {
 	align-items: center;
 	overflow-x: hidden;
 	padding: 20px;
+	z-index: 1;
  }
 
 #player-one-stats {

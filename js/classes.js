@@ -36,12 +36,13 @@ class Player {
 		this.moveUsed = false;
 		this.attackUsed = false;
 		this.isAlive = true;
+		this.abilityUsed = false;
 	}
 
 	attack(e){
 		game.printBoard()
 		game.buttonsActive = false;
-		if ($($(this).children()[0]).attr('class') === 'icon') {
+		if ($($(this).children()[0]).hasClass('icon')) {
 
 			if (game[`player${$($(this).children()[0]).attr('id')}`].HP - game[`player${game.whichPlayer}`].damage < 0) {
 
@@ -357,13 +358,68 @@ class Rogue extends Player {
 		this.isInvisible = null;
 	}
 	ability(){
-		game[`player${game.whichPlayer}`].isInvisible = `p${game.whichPlayer}Hidden`
-		// console.log(this);
-		console.log(`p${game.whichPlayer}Hidden`);
-		// console.log('rogue ability');
+		//go invisible
 
+		game[`player${game.whichPlayer}`].isInvisible = `invisible`
+
+		const curPlay = game[`player${game.whichPlayer}`]
+		const board = $('#game-board').children()
+
+		let currCol;
+		let currRow;
+		let currentLeft;
+		let currentTop;
+
+		for (let i = 0; i < board.length; i++) {
+			if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
+				currCol = $(board[i]).data('columnNum')
+				currRow = $(board[i]).data('rowNum')
+				currentLeft = `${(currCol*10) - 10}%`;
+				currentTop = `${(currRow*10) - 10}%`;
+			};
+		}
+
+		let icon;
+		for (let i = 0; i < board.length; i++){
+			if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
+				icon = $($(board[i]).children()[0]);
+			}
+		}
+
+		const $knife = $(`<img/>`)
+
+		$knife.attr('src',curPlay.icon)
+		console.log(curPlay.icon);
+		$knife.css({
+			'width': '10%',
+			'height': '10%',
+			'margin-top': currentTop,
+			'margin-left': currentLeft,
+		})
+
+		$('#overlay').css('visibility','visible');
+
+		$('#overlay').append($knife)
+
+		
+		icon.hide()
+
+		$knife.animate({
+			'opacity': '0.2',
+		}, 1500, function(){
+			icon.show()
+			$('#overlay').css('visibility','hidden');
+			$('#overlay').empty();
+			game.printBoard();
+			game.checkForWin()
+			game.checkTurnEnding()
+			game.buttonsActive = true;							
+		})	
 	}
 }
+
+
+
 
 class Square {
 	constructor(row, col){
