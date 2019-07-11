@@ -11,7 +11,7 @@ const game = {
 	board:[],
 	classDesc: {
 		rogue: "Fast and silent fighter. Moves quickly but less damage. Ability: Invisibility",
-		fighter: "Studry and persistent combatant. Well rounded stats. Ability: Shield Up",
+		fighter: "Sturdy and persistent combatant. Well rounded stats. Ability: Shield Up",
 		wizard: "Powerful magic user. Has ranged attack but slow moving. Ability: Teleport"
 	},
 
