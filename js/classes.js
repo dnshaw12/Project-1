@@ -27,6 +27,9 @@ class Player {
 		let currCol
 		let currRow
 
+		// loop through board and find where the active player is
+		//assign those coordinates percntages -10 as thats how much margin they are 
+
 		for (let i = 0; i < board.length; i++) {
 			if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
 				currCol = $(board[i]).data('columnNum')
@@ -43,7 +46,7 @@ class Player {
 		let enemyLeft = `${(enemyCol*10) - 10}%`;
 		let enemyTop =  `${(enemyRow*10) - 10}%`;
 
-		//distination angle from right side
+		//distination angle from right side in degrees
 
 		Math.degrees = function(radians) {
 		  	return radians * 180 / Math.PI;
@@ -63,13 +66,18 @@ class Player {
 
 	const calculateDamage = () => {
 
+		//calculates and reduces HP based on attackers damage
+
 		const $opponent = $($(this).children()[0])
 		const opponent = game[`player${$opponent.attr('id')}`]
+
+		// checks if the attacked tile has a player
 		if ($opponent.hasClass('icon')){
 
 			let $opponentHP = game[`player${$opponent.attr('id')}`].HP
 			const $currPlayerDamage = game[`player${game.whichPlayer}`].damage
 
+			//different senarios based on if the player has certain abilities active
 			if (!$opponent.hasClass('shielded')) {
 				if (!$opponent.hasClass('invisible')) {
 
@@ -100,13 +108,14 @@ class Player {
 					game.lastTurnDamage = $currPlayerDamage/2;
 				}
 			}
-		} else {
+		} else { //if no player in a square
 			$('#message-box').text('You missed!')
 			game.animateMessage()
-		}		
+		}
+		game.checkForWin()		
 	}
 
-
+		//wizard attack animation
 		if (curPlay.class === 'Wizard') {
 			const $fireball = $(`<img/>`)
 			$fireball.attr('src',curPlay.fireball)
@@ -139,13 +148,11 @@ class Player {
 					game.buttonsActive = true;
 
 					calculateDamage()
-
-					game.checkForWin()
-					game.checkTurnEnding()
 				})
 			})
 
 
+			//fighter animation
 		} else if (curPlay.class === 'Fighter') {
 			let fighterIcon;
 			for (let i = 0; i < board.length; i++){
@@ -200,13 +207,10 @@ class Player {
 						game.buttonsActive = true;	
 
 						calculateDamage()
-
-						game.checkForWin()
-						game.checkTurnEnding()
 					})	
 				})
 			})
-			
+			//rogue animation
 		} else if (curPlay.class === 'Rogue') {
 			let rogueIcon;
 			for (let i = 0; i < board.length; i++){
@@ -266,16 +270,10 @@ class Player {
 					game.buttonsActive = true;
 
 					calculateDamage()
-
-					game.checkForWin()
-					game.checkTurnEnding()
 				})
 			})
 		}
-
-
-
-
+		//mark active player's attack as used
 		game[`player${game.whichPlayer}`].attackUsed = true;
 	}
 
@@ -285,19 +283,27 @@ class Player {
 		let currentLeft;
 		let currentTop;
 
+		//find active players current postion
+
 		game.board.forEach((row) => {
 			row.forEach((sq) => {
 
 				if (sq.player == game.whichPlayer) {
 						currentLeft = `${(sq.column*10) - 10}%`;
 						currentTop = `${(sq.row*10) - 10}%`;
+
+						// remove player from the array so they dont get printed there again
 						sq.player = 0;
 				}
 			})
 		})
+
+		// percentages are same as attack calulcations
 		const destinationTop = `${($(e).data('rowNum')*10) - 10}%` 
 		const destinationLeft = `${($(e).data('columnNum')*10) - 10}%`
 
+
+		//move animation for player if they are current teleporting
 		const $icon = $(`<img/>`)
 		$icon.attr('src',game[`player${game.whichPlayer}`].icon)
 
@@ -331,7 +337,7 @@ class Player {
 						game.buttonsActive = true;
 						game.board.forEach((row) => {
 							row.forEach((sq) => {
-
+								//change players placement in baord array so new printed board will print it in the correct place
 								if ($(e).attr('id') == sq.id) {
 									sq.player = game.whichPlayer;
 
@@ -341,11 +347,10 @@ class Player {
 					game[`player${game.whichPlayer}`].moveUsed = true;
 					game.printBoard()
 					game.checkForWin()
-					game.checkTurnEnding()
 					})
 				})
 			})
-
+			// animation if NOT teleporting
 		} else {
 			$icon.animate({
 				'margin-top': destinationTop,
@@ -365,7 +370,6 @@ class Player {
 			game[`player${game.whichPlayer}`].moveUsed = true;
 			game.printBoard()
 			game.checkForWin()
-			game.checkTurnEnding()
 			})		
 		}
 		
@@ -373,7 +377,7 @@ class Player {
 
 
 	}
-
+	//marks ability as used
 	initiateAbility(){
 		this.abilityUsed = true
 	}
@@ -383,7 +387,7 @@ class Fighter extends Player {
 	constructor(name, playerNum){
 		super(name, playerNum);
 		this.class = 'Fighter';
-		this.HP = 18;
+		this.HP = 5;
 		this.speed = 4;
 		this.damage = 5;
 		this.range = 1;
@@ -394,7 +398,7 @@ class Fighter extends Player {
 	} 
 	useAbility() {
 		super.initiateAbility()
-		/// Shield Up (helf damage for 2 turns)
+		/// Shield Up (half damage for 2 turns)
 
 		game[`player${game.whichPlayer}`].abilityActive = `shielded`
 
@@ -406,6 +410,8 @@ class Fighter extends Player {
 		let currentLeft;
 		let currentTop;
 
+		// find active players position
+
 		for (let i = 0; i < board.length; i++) {
 			if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
 				currCol = $(board[i]).data('columnNum')
@@ -414,6 +420,8 @@ class Fighter extends Player {
 				currentTop = `${(currRow*10) - 10}%`;
 			};
 		}
+
+		//animation for ability
 
 		const $shield = $(`<img/>`)
 
@@ -439,7 +447,7 @@ class Fighter extends Player {
 			game.printBoard();
 			game.buttonsActive = true;							
 			game.checkForWin()
-			game.checkTurnEnding()
+			
 		})
 
 	}
@@ -453,7 +461,7 @@ class Wizard extends Player {
 		this.originalSpeed = 3;
 		this.speed = this.originalSpeed;
 		this.damage = 5;
-		this.range = 5;
+		this.range = 45;
 		this.icon = 'images/wiz-icon.png'
 		this.fireball = 'images/fireball.gif'
 		this.fire = 'images/fire.gif'
@@ -474,6 +482,8 @@ class Wizard extends Player {
 		let currentLeft;
 		let currentTop;
 
+		// find active players position
+
 		for (let i = 0; i < board.length; i++) {
 			if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
 				currCol = $(board[i]).data('columnNum')
@@ -482,6 +492,8 @@ class Wizard extends Player {
 				currentTop = `${(currRow*10) - 10}%`;
 			};
 		}
+
+		// animation or ability
 
 		const $teleport = $(`<img/>`)
 
@@ -510,8 +522,7 @@ class Wizard extends Player {
 				$('#overlay').empty();
 				game.printBoard();
 				game.buttonsActive = true;							
-				game.checkForWin()
-				game.checkTurnEnding()
+				game.checkForWin
 			})
 		})	
 	}
@@ -544,6 +555,8 @@ class Rogue extends Player {
 		let currentLeft;
 		let currentTop;
 
+		// find active players position
+
 		for (let i = 0; i < board.length; i++) {
 			if (parseInt($($(board[i]).children()[0]).attr('id')) === game.whichPlayer) {
 				currCol = $(board[i]).data('columnNum')
@@ -559,6 +572,8 @@ class Rogue extends Player {
 				icon = $($(board[i]).children()[0]);
 			}
 		}
+
+		// ability animation
 
 		const $knife = $(`<img/>`)
 
@@ -585,8 +600,7 @@ class Rogue extends Player {
 			$('#overlay').empty();
 			game.printBoard();
 			game.buttonsActive = true;							
-			game.checkForWin()
-			game.checkTurnEnding()
+			game.checkForWi
 		})	
 	}
 }

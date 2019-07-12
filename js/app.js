@@ -15,7 +15,10 @@ const game = {
 		wizard: "Powerful magic user. Has ranged attack but slow moving. Ability: Teleport"
 	},
 
+	// creates player 1
+
 	makePlayer1(){
+		//checks for empty values
 		if ($('#p1Input').val() === '' || game.player1Class === null) {
 			$('#message-box').text('Please input your name and choose a class!')
 			game.animateMessage();
@@ -31,6 +34,8 @@ const game = {
 			$('#message-box').text('')
 		} 
 	},
+
+	//creates player 2 and starts game
 
 	makePlayer2(){
 		if ($('#p2Input').val() === '' || game.player2Class === null) {
@@ -51,6 +56,9 @@ const game = {
 	},
 
 	makeBoard(){
+
+		//creates array of arrays of objects. houses current board poistions.
+
 		for (let i = 1; i <= 10; i++){
 			const boardRow = [];
 			for (let j = 1; j <= 10; j++){
@@ -74,7 +82,9 @@ const game = {
 						$div.css('background-color','white')
 					}
 				}
-				// $div.text(`${j}/${i}`)
+				
+				//places icons on game board
+
 				$('#game-board').append($div)
 				const sqObj = new Square(i,j);
 				boardRow.push(sqObj)
@@ -107,6 +117,9 @@ const game = {
 	},
 
 	printBoard(){
+
+		//empty and reprint entry board based of of game.board array
+
 		$('#game-board').empty()
 		this.board.forEach((row, i) =>{
 			row.forEach((sq, j) =>{
@@ -129,10 +142,12 @@ const game = {
 						$div.css('background-color','white')
 					}
 				}
+
+				//re print the icons
+
 				const $icon1 = $(`<img src="${this.player1.icon}" class='icon ${this.player1.abilityActive}' id=1 height="100%" width="100%">`)
 				const $icon2 = $(`<img src="${this.player2.icon}" class='icon ${this.player2.abilityActive}' id=2 height="100%" width="100%">`)
 
-				//re print the icons
 				if (sq.player === 1) {
 					$div.append($icon1);
 					this.player1.currentPosition = $div
@@ -159,25 +174,27 @@ const game = {
 		//check for invisibility and set opacity
 
 		const board = $('#game-board').children()
+
+
 		for (let i = 0; i < board.length; i++) {
+
 			const $img = $($(board[i]).children()[0])
+
+
 			if ($img.hasClass('invisible') && parseInt($img.attr('id')) === this.whichPlayer) {
+
 				$img.css('opacity','0.3');
+
 			} else if ($img.hasClass('invisible') && parseInt($img.attr('id')) !== this.whichPlayer) {
+
 				$img.css('opacity','0')
 			}
 		}
 
+		//show active player's stat board
 
-		for (let i = 1; i <= this.totalPlayers; i++){
-
-			//use player current postion to set opacity to 0
-			//handle insisibility own function
-
-
-
-		}
 		$(`.p${this.whichPlayer}Hidden`).css('visibility','visible')
+
 		$('#game-board').css({'box-shadow': '10px 10px 5px black'})
 	},
 
@@ -185,12 +202,27 @@ const game = {
 		this.makeBoard();
 		this.updateStats()
 
+		// print players names to stat board
+
+		for (let i = 1; i <= this.totalPlayers; i++){
+			$(`#p${i}Name`).text(this[`player${i}`].name+': the '+this[`player${i}`].class)
+		}
+
 	},
 
 	updateStats(){
+
+		//hide all stat bars
+
 		$(`.stats`).css('visibility','hidden')
+
+		//show active player's stats
+
 		$(`.p${this.whichPlayer}Hidden`).css('visibility','visible')
+
 		$('#turn-number').text(this.turn)
+
+		//update players stats
 		for (let i = 1; i <= this.totalPlayers; i++){
 			$(`#p${i}HP`).text(this[`player${i}`].HP)
 			$(`#p${i}Name`).text(this[`player${i}`].name+': the '+this[`player${i}`].class)
@@ -201,22 +233,32 @@ const game = {
 
 		const curPlay = game[`player${game.whichPlayer}`]
 
+		// make sure active player clicked on their own icon
+
 		if ($($(e).children()[0]).attr('id') == this.whichPlayer) {
+
+			// check if the player has already moved
 
 			if (curPlay.moveUsed === true) {
 				$('#message-box').text('You already moved this turn!')
 				this.animateMessage();
-			} else{
+			} else {
+
 				this.printBoard()
+
 				const colNum = $(e).attr('data-column-num')
 				const rowNum = $(e).attr('data-row-num')
 				
 				const board = $('#game-board').children()
 
+				//loop through entire board and find tiles in speed range on x and y axis of player
+
 				for (let i = 0; i < board.length; i++) {
 					if ($(board[i]).attr('data-row-num') === rowNum && $(board[i]).attr('data-column-num') <= parseInt(colNum) + curPlay.speed && $(board[i]).attr('data-column-num') > parseInt(colNum) || 
 
 						$(board[i]).attr('data-row-num') === rowNum && $(board[i]).attr('data-column-num') >= parseInt(colNum) - curPlay.speed && $(board[i]).attr('data-column-num') < parseInt(colNum)) {
+
+						//exclude tiles with other players
 
 						if (!$($(board[i]).children()[0]).hasClass('icon')) {
 							$(board[i]).addClass('moveSpace')
@@ -225,6 +267,9 @@ const game = {
 								this[`player${game.whichPlayer}`].move(e)
 							})
 						}
+
+						// manage move if there is an invisible player on the tile
+
 						if ($($(board[i]).children()[0]).hasClass('icon') && $($(board[i]).children()[0]).hasClass('invisible')) {
 								$(board[i]).addClass('moveSpace');
 								$(board[i]).on('click',(el)=>{
@@ -236,6 +281,7 @@ const game = {
 					}
 				}
 
+				//same as above but catches the tiles not on the x/y axises
 				
 				for (let i = 0; i < board.length; i++){
 					for (let j = curPlay.speed; j >= 0; j--){
@@ -278,6 +324,9 @@ const game = {
 		const colNum = $(curPlay.currentPosition).attr('data-column-num')
 		const rowNum = $(curPlay.currentPosition).attr('data-row-num')
 
+
+		// same has highlight move function but based off of players range
+
 		if (curPlay.attackUsed === true) {
 			$('#message-box').text('You already attacked this turn!')
 			game.animateMessage();
@@ -318,9 +367,15 @@ const game = {
 	},
 
 	handleInvisible(invisiblePlayer){
+
+		//executes when player either steps on or attackes invisible player
+
 		$('#message-box').text('You found an invisible person!');
 		this.animateMessage();
+
 		$unhide = this[`player${invisiblePlayer}`];
+
+		//reset ability stats
 		$unhide.abilityActive = null;
 		$unhide.opacity = 1;
 
@@ -328,10 +383,15 @@ const game = {
 		const curPlay = this[`player${invisiblePlayer}`]
 		const board = $('#game-board').children()
 
+
+		//animation for unhiding
+
 		let currCol;
 		let currRow;
 		let currentLeft;
 		let currentTop;
+
+		// find hidden players location
 
 		for (let i = 0; i < board.length; i++) {
 			if (parseInt($($(board[i]).children()[0]).attr('id')) === $unhide.playerNum) {
@@ -360,8 +420,14 @@ const game = {
 	},
 
 	checkTurnEnding(){
+
+		//checks for end of turn
+
 		const curPlay = game[`player${game.whichPlayer}`];
 		let totalDead = 0;
+
+		//counts how many players are dead
+
 		for (let i = 1; i <= this.totalPlayers; i++){
 			const player = this[`player${i}`]
 			if (player.HP === 0 && player.isAlive === true) {
@@ -369,9 +435,14 @@ const game = {
 				totalDead++;
 			}	
 		}
+
+		// if there is more than 1 player alive, continue game
+
 		if (curPlay.moveUsed === true && curPlay. attackUsed === true && totalDead !== this.totalPlayers - 1 ) {
 
 			$(`.p${game.whichPlayer}Hidden`).css('visibility','hidden')
+
+			//change turn to next players
 
 			if (this.whichPlayer !== this.totalPlayers) {
 				this.whichPlayer++;
@@ -379,6 +450,9 @@ const game = {
 				this.whichPlayer = 1;
 				this.turn++;
 			}
+
+			//reset game mechanics for new turn
+
 			this.buttonsActive = false;
 			curPlay.moveUsed = false;
 			curPlay.attackUsed = false;
@@ -386,6 +460,8 @@ const game = {
 
 			// add player switch screen
 			const nextPlayer = game[`player${game.whichPlayer}`]
+
+			//create trurn transiation screen
 
 			const $div = $(`<div></div>`)
 			const $button = $(`<button id="start-turn">Take Turn</button>`)
@@ -412,6 +488,8 @@ const game = {
 			$('#game-board').empty();
 			$('#game-board').append($div);
 
+			// increase ability uses and removes them if they expire (minus teleport)
+
 			if (curPlay.abilityActive !== null && curPlay.abilityActive !== 'teleport') {
 				curPlay.abilityTurns++
 			}
@@ -433,6 +511,9 @@ const game = {
 	},
 
 	passTurn(){
+
+		//allows player to pass turn without taking all actions
+
 		const curPlay = game[`player${game.whichPlayer}`];
 		curPlay.moveUsed = true;
 		curPlay.attackUsed = true;
@@ -440,9 +521,14 @@ const game = {
 	},
 
 	checkForWin(){
+		console.log('cfw');
+		//checks for a winner
+
 		this.updateStats()
 		let totalDead = 0;
 		let winner;
+
+		//counts dead players
 		for (let i = 1; i <= this.totalPlayers; i++){
 			const player = this[`player${i}`]
 			if (player.HP === 0 && player.isAlive === true) {
@@ -450,6 +536,9 @@ const game = {
 				totalDead++;
 			}	
 		}
+		console.log(totalDead);
+
+		// checks if there is only one player left alive
 		if (totalDead === this.totalPlayers - 1) {	
 			for (let i = 1; i <= this.totalPlayers; i++){
 				const player = this[`player${i}`]
@@ -458,10 +547,14 @@ const game = {
 				}
 			}
 		}
+
+		// if a winner if decided
 		if (winner !== undefined) {
 			$('#game-board').css({'box-shadow': '0px 0px 0px black'})
 			$(`.stats`).css('visibility','visible')
 			this.buttonsActive = false;
+
+			//create end game screen/message
 			const $div = $(`<div id='end-game'></div>`)
 			$div.addClass('endScreen')
 			$p = $(`<p>${winner.name} the ${winner.class} Wins!</p>`)
@@ -482,10 +575,14 @@ const game = {
 			$div.append($button);
 			$('#game-board').empty();
 			$('#game-board').append($div);
+		} else {
+			game.checkTurnEnding()
 		}
 	},
 
 	animateMessage(){
+
+		//blinking animation fo messaging
 		$('#message-box').addClass('messageAnimate')
 		let time = 0;
 		const timer = setInterval(()=>{
@@ -498,6 +595,8 @@ const game = {
 	},
 
 	resetGame(){
+
+		// resets all game properties and starts game over
 		for (let i = 1; i <= this.totalPlayers; i++){
 			this[`player${i}`] = null
 			$(`#p${i}StartScreen`).css('visibility','visible')
