@@ -461,7 +461,7 @@ class Wizard extends Player {
 		this.originalSpeed = 3;
 		this.speed = this.originalSpeed;
 		this.damage = 5;
-		this.range = 45;
+		this.range = 5;
 		this.icon = 'images/wiz-icon.png'
 		this.fireball = 'images/fireball.gif'
 		this.fire = 'images/fire.gif'
