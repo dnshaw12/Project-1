@@ -128,11 +128,11 @@ footer {
 	font-size: 20px;
 }
 
-.classSelector{
+.classSelector, .playersSelector{
 	margin: 0 8px;
 }
 
-#p1StartScreen, #p2StartScreen {
+#playerNumSelector, #p1StartScreen, #p2StartScreen, #p3StartScreen, #p4StartScreen {
 	height: 70%;
 	width: 50%;
 	border-radius: 35px;
@@ -148,11 +148,30 @@ footer {
 	background-image: radial-gradient(rgb(218,165,32) , gold)
 }
 
+#playerNumSelector {
+	z-index: 5;
+}
+
+#numSelector {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+
+}
+
 #p1StartScreen {
-	z-index: 2;
+	z-index: 4;
 }
 
 #p2StartScreen {
+	z-index: 3;
+}
+
+#p3StartScreen {
+	z-index: 2;
+}
+
+#p4StartScreen {
 	z-index: 1;
 }
 

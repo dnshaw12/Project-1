@@ -1,10 +1,11 @@
 const game = {
-	player1: null,
 	player1Class: null,
-	player2: null,
 	player2Class: null,
+	player3Class: null,
+	player4Class: null,
+	players: [],
 	turn: 1,
-	totalPlayers: 2,
+	totalPlayers: 0,
 	whichPlayer: 1,
 	buttonsActive: true,
 	lastTurnDamage: 0,
@@ -14,6 +15,10 @@ const game = {
 		fighter: "Sturdy and persistent combatant. Well rounded stats. Ability: Shield Up",
 		wizard: "Powerful magic user. Has ranged attack but slow moving. Ability: Teleport"
 	},
+
+	// create multiple players
+
+
 
 	// creates player 1
 
@@ -611,6 +616,11 @@ const game = {
 
 	}
 }
+
+$('#numSelector').on('click',(e)=>{
+	game.totalPlayers = parseInt($(e.target).attr('id'));
+	console.log(game.totalPlayers);
+})
 
 $('#p1Buttons').on('click',(e)=>{
 	game.player1Class = $(e.target).attr('id');
