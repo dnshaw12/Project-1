@@ -116,7 +116,7 @@ const game = {
 				game.whichPlayer++;
 			} else {
 				game.whichPlayer = 1;
-				$(e.target).parent().hide()
+				$(e.target).parent().css('visibility','hidden')
 				// game.startGame()
 			}
 		}
@@ -360,15 +360,17 @@ const game = {
 
 		//show active player's stats
 
-		$(`.p${this.whichPlayer}Hidden`).css('visibility','visible')
+		if (this.whichPlayer%2 === 0) {
+			$(`.p2Hidden`).css('visibility','visible')
+			$(`#p2HP`).text(this.players[`player${this.whichPlayer}`].HP)
+			$(`#p2Name`).text(this.players[`player${this.whichPlayer}`].name+': the '+this.players[`player${this.whichPlayer}`].class)
+		} else {
+			$(`.p1Hidden`).css('visibility','visible')
+			$(`#p1HP`).text(this.players[`player${this.whichPlayer}`].HP)
+			$(`#p1Name`).text(this.players[`player${this.whichPlayer}`].name+': the '+this.players[`player${this.whichPlayer}`].class)
+		}
 
 		$('#turn-number').text(this.turn)
-
-		//update players stats
-		for (let i = 1; i <= this.totalPlayers; i++){
-			$(`#p${i}HP`).text(this.players[`player${i}`].HP)
-			$(`#p${i}Name`).text(this.players[`player${i}`].name+': the '+this.players[`player${i}`].class)
-		}
 	},
 
 	highlightMoves(e){
@@ -582,7 +584,7 @@ const game = {
 
 		if (curPlay.moveUsed === true && curPlay. attackUsed === true && totalDead !== this.totalPlayers - 1 ) {
 
-			$(`.p${game.whichPlayer}Hidden`).css('visibility','hidden')
+			$(`.stats`).css('visibility','hidden')
 
 			//change turn to next players
 
@@ -757,7 +759,7 @@ const game = {
 $('#numSelector').on('click',(e)=>{
 	game.totalPlayers = parseInt($(e.target).attr('id'));
 	console.log(game.totalPlayers);
-	$('#playerNumSelector').hide()
+	$('#playerNumSelector').css('visibility','hidden')
 
 })
 
