@@ -3,6 +3,10 @@ const game = {
 	player2Class: null,
 	player3Class: null,
 	player4Class: null,
+	player1Name: null,
+	player2Name: null,
+	player3Name: null,
+	player4Name: null,
 	players: [],
 	turn: 1,
 	totalPlayers: 0,
@@ -20,43 +24,49 @@ const game = {
 
 	// function() creates class selection screen based on totalPlayers
 
-	initiatePlayers() {
+	// initiatePlayers() {
 
-		for (let i = 1; i <= game.totalPlayers; i++){
-			const $div = $(`<div id="p${i}StartScreen"></div>`)
-			const $h1 = $(`<h1>Player ${i}! Ready yourself!</h1>`)
-			const $input = $(`<input type="text" name="name" placeholder="Your name!" autofocus id="p${i}Input">`)
-			const $h2 = $(`<h2>Classes</h2>`)
-			const $classDiv = $(`<div id="p${i}Buttons">`)
-			const $fighterButton = $(`<button class='classSelector' id="fighter">Fighter!</button>`)
+	// 	for (let i = 1; i <= game.totalPlayers; i++){
+	// 		const $div = $(`<div id="p${i}StartScreen"></div>`)
+	// 		const $h1 = $(`<h1>Player ${i}! Ready yourself!</h1>`)
+	// 		const $input = $(`<input type="text" name="name" placeholder="Your name!" autofocus id="p${i}Input">`)
+	// 		const $h2 = $(`<h2>Classes</h2>`)
+	// 		const $classDiv = $(`<div id="p${i}Buttons">`)
+	// 		const $fighterButton = $(`<button class='classSelector' id="fighter">Fighter!</button>`)
 
-			const $wizardButton = $(`<button class='classSelector' id="wizard">Wizard!</button>`)
+	// 		const $wizardButton = $(`<button class='classSelector' id="wizard">Wizard!</button>`)
 
-			const $rogueButton = $(`<button class='classSelector' id="rogue">Rogue!</button>`)
+	// 		const $rogueButton = $(`<button class='classSelector' id="rogue">Rogue!</button>`)
 
-			const $submitButton = $(`<button class="submitButton" id="p${i}StartButton">Ready!</button>`)
+	// 		const $submitButton = $(`<button class="submitButton" id="p${i}StartButton">Ready!</button>`)
 
 
-			$('.classSelector').on('click', (e) => {
-				game.selectClass(e);
-			})
-			$submitButton.on('click',(e) => {
-				game.submitPlayer(e)	
-			})
+	// 		$wizardButton.on('click', (e) => {
+	// 			game.selectClass(e);
+	// 		})
+	// 		$fighterButton.on('click', (e) => {
+	// 			game.selectClass(e);
+	// 		})
+	// 		$rogueButton.on('click', (e) => {
+	// 			game.selectClass(e);
+	// 		})
+	// 		$submitButton.on('click',(e) => {
+	// 			game.submitPlayer(e)	
+	// 		})
 
-			$classDiv.append($fighterButton)
-			$classDiv.append($wizardButton)
-			$classDiv.append($rogueButton)
-			$div.append($h1)
-			$div.append($input)
-			$div.append($h2)
-			$div.append($classDiv)
-			$div.append($submitButton)
+	// 		$classDiv.append($fighterButton)
+	// 		$classDiv.append($wizardButton)
+	// 		$classDiv.append($rogueButton)
+	// 		$div.append($h1)
+	// 		$div.append($input)
+	// 		$div.append($h2)
+	// 		$div.append($classDiv)
+	// 		$div.append($submitButton)
 
-			$('main').append($div)
-		}
+	// 		$('main').append($div)
+	// 	}
 
-	},
+	// },
 
 	// function() makes players based on logged class
 
@@ -80,56 +90,69 @@ const game = {
 			$('#message-box').text('Please input your name and choose a class!')
 			game.animateMessage();
 		} else {
+			game[`player${game.whichPlayer}Name`] = $(`#p${game.whichPlayer}Input`).val();
+			$(`#p${game.whichPlayer}Input`).text('');
+			$('button').css({'color': 'black'});
+
+			$('#playerNum').text(game.whichPlayer);
+			$(`#p${game.whichPlayer}StartScreen`).attr('id',`p${game.whichPlayer + 1}StartScreen`)
+			$(`#p${game.whichPlayer}Input`).attr('id',`p${game.whichPlayer + 1}Input`)
+
+
+
+			$('#message-box').text('')
+
 			if (game.whichPlayer !== game.totalPlayers) {
 				game.whichPlayer++;
 			} else {
 				game.whichPlayer = 1;
 			}
 
-			$('#message-box').text('')
-			$(e.target).parent().hide()
+			if (game.whichPlayer === game.totalPlayers) {
+				$(e.target).parent().hide()
+			}
 		}
 	},
 
 	// creates player 1
 
-	makePlayer1(){
-		//checks for empty values
-		if ($('#p1Input').val() === '' || game.player1Class === null) {
-			$('#message-box').text('Please input your name and choose a class!')
-			game.animateMessage();
-		} else {
-			if (game.player1Class === 'fighter') {
-				game.player1 = new Fighter($('#p1Input').val(),1)
-			} else if (game.player1Class === 'wizard') {
-				game.player1 = new Wizard($('#p1Input').val(),1)
-			} else if (game.player1Class === 'rogue') {
-				game.player1 = new Rogue($('#p1Input').val(),1)
-			}
-			$('#p1StartScreen').css('visibility','hidden')
-			$('#message-box').text('')
-		} 
-	},
+	// makePlayer1(){
+	// 	//checks for empty values
+	// 	if ($('#p1Input').val() === '' || game.player1Class === null) {
+	// 		$('#message-box').text('Please input your name and choose a class!')
+	// 		game.animateMessage();
+	// 	} else {
+	// 		if (game.player1Class === 'fighter') {
+	// 			game.player1 = new Fighter($('#p1Input').val(),1)
+	// 		} else if (game.player1Class === 'wizard') {
+	// 			game.player1 = new Wizard($('#p1Input').val(),1)
+	// 		} else if (game.player1Class === 'rogue') {
+	// 			game.player1 = new Rogue($('#p1Input').val(),1)
+	// 		}
+	// 		$('#p1StartScreen').css('visibility','hidden')
+	// 		$('#message-box').text('')
+	// 	} 
+	// },
 
-	//creates player 2 and starts game
+	// //creates player 2 and starts game
 
-	makePlayer2(){
-		if ($('#p2Input').val() === '' || game.player2Class === null) {
-			$('#message-box').text('Please input your name and choose a class!')
-			game.animateMessage();
-		} else {
-			if (game.player2Class === 'fighter') {
-				game.player2 = new Fighter($('#p2Input').val(),2)
-			} else if (game.player2Class === 'wizard') {
-				game.player2 = new Wizard($('#p2Input').val(),2)
-			} else if (game.player2Class === 'rogue') {
-				game.player2 = new Rogue($('#p2Input').val(),2)
-			}
-			$('#p2StartScreen').css('visibility','hidden')
-			$('#message-box').text('')
-			game.startGame()
-		} 
-	},
+	// makePlayer2(){
+	// 	if ($('#p2Input').val() === '' || game.player2Class === null) {
+	// 		$('#message-box').text('Please input your name and choose a class!')
+	// 		game.animateMessage();
+	// 	} else {
+	// 		if (game.player2Class === 'fighter') {
+	// 			game.player2 = new Fighter($('#p2Input').val(),2)
+	// 		} else if (game.player2Class === 'wizard') {
+	// 			game.player2 = new Wizard($('#p2Input').val(),2)
+	// 		} else if (game.player2Class === 'rogue') {
+	// 			game.player2 = new Rogue($('#p2Input').val(),2)
+	// 		}
+	// 		$('#p2StartScreen').css('visibility','hidden')
+	// 		$('#message-box').text('')
+	// 		game.startGame()
+	// 	} 
+	// },
 
 	makeBoard(){
 
@@ -691,7 +714,6 @@ const game = {
 $('#numSelector').on('click',(e)=>{
 	game.totalPlayers = parseInt($(e.target).attr('id'));
 	console.log(game.totalPlayers);
-	game.initiatePlayers();
 	$('#playerNumSelector').hide()
 
 })
@@ -701,34 +723,15 @@ $('#numSelector').on('click',(e)=>{
 // })
 
 $('.classSelector').on('click', (e) => {
-	game[`player${game.whichPlayer}Class`] = $(e.target).attr('id');
-
-	$('button').css({
-				'color': 'black'
-			})
-			$(e.target).css({
-				'color': 'rgb(218,165,32)'
-			})
+	game.selectClass(e)
 })
 
-// $('.submitButton').on('click', (e) => {
+$('.submitButton').on('click', (e) => {
 
-// 	if ($(`#p${game.whichPlayer}Input`).val() === '' || game[`player${game.whichPlayer}Class`] === null) {
-// 			$('#message-box').text('Please input your name and choose a class!')
-// 			game.animateMessage();
-// 		} else {
-// 			if (game.whichPlayer !== game.totalPlayers) {
-// 				game.whichPlayer++;
-// 			} else {
-// 				game.whichPlayer = 1;
-// 			}
-
-// 			$('#message-box').text('')
-// 			$(e.target).parent().hide()
-// 		}
+	game.submitPlayer(e)
 
 	
-// })
+})
 
 // $('#p1StartButton').on('click',game.makePlayer1)
 
