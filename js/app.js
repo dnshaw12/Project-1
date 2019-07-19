@@ -18,7 +18,78 @@ const game = {
 
 	// create multiple players
 
+	// function() creates class selection screen based on totalPlayers
 
+	initiatePlayers() {
+
+		for (let i = 1; i <= game.totalPlayers; i++){
+			const $div = $(`<div id="p${i}StartScreen"></div>`)
+			const $h1 = $(`<h1>Player ${i}! Ready yourself!</h1>`)
+			const $input = $(`<input type="text" name="name" placeholder="Your name!" autofocus id="p${i}Input">`)
+			const $h2 = $(`<h2>Classes</h2>`)
+			const $classDiv = $(`<div id="p${i}Buttons">`)
+			const $fighterButton = $(`<button class='classSelector' id="fighter">Fighter!</button>`)
+
+			const $wizardButton = $(`<button class='classSelector' id="wizard">Wizard!</button>`)
+
+			const $rogueButton = $(`<button class='classSelector' id="rogue">Rogue!</button>`)
+
+			const $submitButton = $(`<button class="submitButton" id="p${i}StartButton">Ready!</button>`)
+
+
+			$('.classSelector').on('click', (e) => {
+				game.selectClass(e);
+			})
+			$submitButton.on('click',(e) => {
+				game.submitPlayer(e)	
+			})
+
+			$classDiv.append($fighterButton)
+			$classDiv.append($wizardButton)
+			$classDiv.append($rogueButton)
+			$div.append($h1)
+			$div.append($input)
+			$div.append($h2)
+			$div.append($classDiv)
+			$div.append($submitButton)
+
+			$('main').append($div)
+		}
+
+	},
+
+	// function() makes players based on logged class
+
+	// makePlayers() {
+
+	// }
+
+	selectClass(e){
+		game[`player${game.whichPlayer}Class`] = $(e.target).attr('id');
+
+	$('button').css({
+				'color': 'black'
+			})
+			$(e.target).css({
+				'color': 'rgb(218,165,32)'
+			})
+	},
+
+	submitPlayer(e){
+		if ($(`#p${game.whichPlayer}Input`).val() === '' || game[`player${game.whichPlayer}Class`] === null) {
+			$('#message-box').text('Please input your name and choose a class!')
+			game.animateMessage();
+		} else {
+			if (game.whichPlayer !== game.totalPlayers) {
+				game.whichPlayer++;
+			} else {
+				game.whichPlayer = 1;
+			}
+
+			$('#message-box').text('')
+			$(e.target).parent().hide()
+		}
+	},
 
 	// creates player 1
 
@@ -620,31 +691,58 @@ const game = {
 $('#numSelector').on('click',(e)=>{
 	game.totalPlayers = parseInt($(e.target).attr('id'));
 	console.log(game.totalPlayers);
+	game.initiatePlayers();
+	$('#playerNumSelector').hide()
+
 })
 
-$('#p1Buttons').on('click',(e)=>{
-	game.player1Class = $(e.target).attr('id');
+// $('#p1Buttons').on('click',(e)=>{
+// 	game.player1Class = $(e.target).attr('id');
+// })
+
+$('.classSelector').on('click', (e) => {
+	game[`player${game.whichPlayer}Class`] = $(e.target).attr('id');
+
 	$('button').css({
-		'color': 'black'
-	})
-	$(e.target).css({
-		'color': 'rgb(218,165,32)'
-	})
+				'color': 'black'
+			})
+			$(e.target).css({
+				'color': 'rgb(218,165,32)'
+			})
 })
 
-$('#p1StartButton').on('click',game.makePlayer1)
+// $('.submitButton').on('click', (e) => {
 
-$('#p2Buttons').on('click',(e)=>{
-	game.player2Class = $(e.target).attr('id');
-	$('button').css({
-		'color': 'black'
-	})
-	$(e.target).css({
-		'color': 'rgb(218,165,32)'
-	})
-})
+// 	if ($(`#p${game.whichPlayer}Input`).val() === '' || game[`player${game.whichPlayer}Class`] === null) {
+// 			$('#message-box').text('Please input your name and choose a class!')
+// 			game.animateMessage();
+// 		} else {
+// 			if (game.whichPlayer !== game.totalPlayers) {
+// 				game.whichPlayer++;
+// 			} else {
+// 				game.whichPlayer = 1;
+// 			}
 
-$('#p2StartButton').on('click',game.makePlayer2)
+// 			$('#message-box').text('')
+// 			$(e.target).parent().hide()
+// 		}
+
+	
+// })
+
+// $('#p1StartButton').on('click',game.makePlayer1)
+
+// $('#p2Buttons').on('click',(e)=>{
+// 	game.player2Class = $(e.target).attr('id');
+// 	$('button').css({
+// 		'color': 'black'
+// 	})
+// 	$(e.target).css({
+// 		'color': 'rgb(218,165,32)'
+// 	})
+// })
+
+// $('#p2StartButton').on('click',game.makePlayer2)
 
 $('.attackButton').on('click',() =>{
 	if (game.buttonsActive === true) {
