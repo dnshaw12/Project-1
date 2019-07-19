@@ -70,9 +70,19 @@ const game = {
 
 	// function() makes players based on logged class
 
-	// makePlayers() {
+	makePlayers() {
 
-	// }
+		for (let i = 1; i <= this.totalPlayers; i++) {
+			if (game[`player${i}Class`] === 'fighter') {
+				game.players[`player${i}`] = new Fighter(game[`player${i}Name`],1)
+			} else if (game[`player${i}Class`] === 'wizard') {
+				game.players[`player${i}`] = new Wizard(game[`player${i}Name`],1)
+			} else if (game[`player${i}Class`] === 'rogue') {
+				game.players[`player${i}`] = new Rogue(game[`player${i}Name`],1)
+			}
+		}
+
+	},
 
 	selectClass(e){
 		game[`player${game.whichPlayer}Class`] = $(e.target).attr('id');
@@ -91,10 +101,10 @@ const game = {
 			game.animateMessage();
 		} else {
 			game[`player${game.whichPlayer}Name`] = $(`#p${game.whichPlayer}Input`).val();
-			$(`#p${game.whichPlayer}Input`).text('');
+			$(`#p${game.whichPlayer}Input`).val('');
 			$('button').css({'color': 'black'});
 
-			$('#playerNum').text(game.whichPlayer);
+			$('#playerNum').text(game.whichPlayer + 1);
 			$(`#p${game.whichPlayer}StartScreen`).attr('id',`p${game.whichPlayer + 1}StartScreen`)
 			$(`#p${game.whichPlayer}Input`).attr('id',`p${game.whichPlayer + 1}Input`)
 
@@ -106,10 +116,8 @@ const game = {
 				game.whichPlayer++;
 			} else {
 				game.whichPlayer = 1;
-			}
-
-			if (game.whichPlayer === game.totalPlayers) {
 				$(e.target).parent().hide()
+				// game.startGame()
 			}
 		}
 	},
@@ -161,57 +169,73 @@ const game = {
 		for (let i = 1; i <= 10; i++){
 			const boardRow = [];
 			for (let j = 1; j <= 10; j++){
-				const $div = $(`<div data-column-num="${j}" id="${j}-${i}" data-row-num="${i}"></div>`);
-				$div.css({
-					'width':'10%',
-					'height':'10%',
-					'z-index':'0'
-				});
+				// const $div = $(`<div data-column-num="${j}" id="${j}-${i}" data-row-num="${i}"></div>`);
+				// $div.css({
+				// 	'width':'10%',
+				// 	'height':'10%',
+				// 	'z-index':'0'
+				// });
 
-				if (i%2) {
-					if (j%2) {
-						$div.css('background-color','white')
-					} else {
-						$div.css('background-color','grey')
-					}
-				} else {
-					if (j%2) {
-						$div.css('background-color','grey')
-					} else {
-						$div.css('background-color','white')
-					}
-				}
+				// if (i%2) {
+				// 	if (j%2) {
+				// 		$div.css('background-color','white')
+				// 	} else {
+				// 		$div.css('background-color','grey')
+				// 	}
+				// } else {
+				// 	if (j%2) {
+				// 		$div.css('background-color','grey')
+				// 	} else {
+				// 		$div.css('background-color','white')
+				// 	}
+				// }
 				
 				//places icons on game board
 
-				$('#game-board').append($div)
+				// $('#game-board').append($div)
 				const sqObj = new Square(i,j);
 				boardRow.push(sqObj)
-				const $icon1 = $(`<img src="${this.player1.icon}" class='icon ${this.player1.abilityActive}' id=1 height="100%" width="100%">`)
-				const $icon2 = $(`<img src="${this.player2.icon}" class='icon ${this.player2.abilityActive}' id=2 height="100%" width="100%">`)
 
-				if (i === 1 && j === 1) {
-					$div.append($icon1)
-					this.player1.currentPosition = $div
-					$div.on('click',(e) => {
+				// const $icon1 = $(`<img src="${this.player1.icon}" class='icon ${this.player1.abilityActive}' id=1 height="100%" width="100%">`)
+				// const $icon2 = $(`<img src="${this.player2.icon}" class='icon ${this.player2.abilityActive}' id=2 height="100%" width="100%">`)
 
-						this.printBoard()
-						this.highlightMoves(e.currentTarget);
+				// if (i === 1 && j === 1) {
+				// 	$div.append($icon1)
+				// 	this.player1.currentPosition = $div
+				// 	$div.on('click',(e) => {
+
+				// 		this.printBoard()
+				// 		this.highlightMoves(e.currentTarget);
 
 
-					})
-				} else if (i === 10 && j === 10) {
-					$div.append($icon2)
-					this.player2.currentPosition = $div
-					$div.on('click',(e) => {
-						this.printBoard()
-						this.highlightMoves(e.currentTarget);
+				// 	})
+				// } else if (i === 10 && j === 10) {
+				// 	$div.append($icon2)
+				// 	this.player2.currentPosition = $div
+				// 	$div.on('click',(e) => {
+				// 		this.printBoard()
+				// 		this.highlightMoves(e.currentTarget);
 
-					})
-				}
+				// 	})
+				// }
 			}
+
 			this.board.push(boardRow);
 		}
+		if (this.totalPlayers === 4) {
+			this.board[0][0].player = 1;
+			this.board[0][9].player = 2;
+			this.board[9][9].player = 3;
+			this.board[9][0].player = 4;
+		} else if (this.totalPlayers === 3) {
+			this.board[0][0].player = 1;
+			this.board[0][9].player = 2;
+			this.board[9][9].player = 3;
+		} else {
+			this.board[0][0].player = 1;
+			this.board[9][9].player = 2;
+		}
+		this.printBoard()
 		$('#game-board').css({'box-shadow': '10px 10px 5px black'})
 	},
 
@@ -244,27 +268,45 @@ const game = {
 
 				//re print the icons
 
-				const $icon1 = $(`<img src="${this.player1.icon}" class='icon ${this.player1.abilityActive}' id=1 height="100%" width="100%">`)
-				const $icon2 = $(`<img src="${this.player2.icon}" class='icon ${this.player2.abilityActive}' id=2 height="100%" width="100%">`)
+				//////
 
-				if (sq.player === 1) {
-					$div.append($icon1);
-					this.player1.currentPosition = $div
-					$div.on('click',(e) => {
+				// const $icon1 = $(`<img src="${this.player1.icon}" class='icon ${this.player1.abilityActive}' id=1 height="100%" width="100%">`)
+				// const $icon2 = $(`<img src="${this.player2.icon}" class='icon ${this.player2.abilityActive}' id=2 height="100%" width="100%">`)
+
+				// if (sq.player === 1) {
+				// 	$div.append($icon1);
+				// 	this.player1.currentPosition = $div
+				// 	$div.on('click',(e) => {
+
+				// 		this.highlightMoves(e.currentTarget);
+
+
+				// 	})
+				// } else if (sq.player === 2) {
+				// 	$div.append($icon2);
+				// 	this.player2.currentPosition = $div
+				// 	$div.on('click',(e) => {
+
+				// 		this.highlightMoves(e.currentTarget);
+
+
+				// 	})
+				// }
+
+				//////
+
+				for (let i = 1; i <= this.totalPlayers; i++){
+					const $icon = $(`<img src="${this.players[`player${i}`].icon}" class='icon ${this.players[`player${i}`].abilityActive}' id=${i} height="100%" width="100%">`)
+					if (sq.player === i) {
+						$div.append($icon)
+						this.players[`player${i}`].currentPosition = $div
+						$div.on('click',(e) => {
 
 						this.highlightMoves(e.currentTarget);
 
 
 					})
-				} else if (sq.player === 2) {
-					$div.append($icon2);
-					this.player2.currentPosition = $div
-					$div.on('click',(e) => {
-
-						this.highlightMoves(e.currentTarget);
-
-
-					})
+					}
 				}
 				$('#game-board').append($div)
 			})
@@ -298,13 +340,14 @@ const game = {
 	},
 
 	startGame(){
+		this.makePlayers()
 		this.makeBoard();
 		this.updateStats()
 
 		// print players names to stat board
 
 		for (let i = 1; i <= this.totalPlayers; i++){
-			$(`#p${i}Name`).text(this[`player${i}`].name+': the '+this[`player${i}`].class)
+			$(`#p${i}Name`).text(this.players[`player${i}`].name+': the '+this.players[`player${i}`].class)
 		}
 
 	},
@@ -323,14 +366,14 @@ const game = {
 
 		//update players stats
 		for (let i = 1; i <= this.totalPlayers; i++){
-			$(`#p${i}HP`).text(this[`player${i}`].HP)
-			$(`#p${i}Name`).text(this[`player${i}`].name+': the '+this[`player${i}`].class)
+			$(`#p${i}HP`).text(this.players[`player${i}`].HP)
+			$(`#p${i}Name`).text(this.players[`player${i}`].name+': the '+this.players[`player${i}`].class)
 		}
 	},
 
 	highlightMoves(e){
 
-		const curPlay = game[`player${game.whichPlayer}`]
+		const curPlay = game.players[`player${game.whichPlayer}`]
 
 		// make sure active player clicked on their own icon
 
@@ -363,7 +406,7 @@ const game = {
 							$(board[i]).addClass('moveSpace')
 							$(board[i]).on('click',(el)=>{
 								const e = el.target
-								this[`player${game.whichPlayer}`].move(e)
+								this.players[`player${game.whichPlayer}`].move(e)
 							})
 						}
 
@@ -397,7 +440,7 @@ const game = {
 								$(board[i]).addClass('moveSpace');
 								$(board[i]).on('click',(el)=>{
 									const e = el.target
-									this[`player${game.whichPlayer}`].move(e)
+									this.players[`player${game.whichPlayer}`].move(e)
 								})
 							}
 							if ($($(board[i]).children()[0]).hasClass('icon') && $($(board[i]).children()[0]).hasClass('invisible')) {
@@ -416,7 +459,7 @@ const game = {
 	},
 
 	highlightAttacks(){
-		const curPlay = game[`player${game.whichPlayer}`];
+		const curPlay = game.players[`player${game.whichPlayer}`];
 
 		const board = $('#game-board').children()
 
@@ -441,7 +484,7 @@ const game = {
 
 					) {
 					$(board[i]).addClass('attackSpace')
-					$(board[i]).on('click',this[`player${game.whichPlayer}`].attack)
+					$(board[i]).on('click',this.players[`player${game.whichPlayer}`].attack)
 				}
 			}
 			
@@ -456,7 +499,7 @@ const game = {
 
 						$(board[i]).attr('data-column-num') == parseInt(colNum) - j && $(board[i]).attr('data-row-num') <= parseInt(rowNum) + curPlay.range - j && $(board[i]).attr('data-row-num') > parseInt(rowNum) ) {
 						$(board[i]).addClass('attackSpace');
-						$(board[i]).on('click',this[`player${game.whichPlayer}`].attack)
+						$(board[i]).on('click',this.players[`player${game.whichPlayer}`].attack)
 
 					}
 				}
@@ -479,7 +522,7 @@ const game = {
 		$unhide.opacity = 1;
 
 
-		const curPlay = this[`player${invisiblePlayer}`]
+		const curPlay = this.players[`player${invisiblePlayer}`]
 		const board = $('#game-board').children()
 
 
@@ -522,13 +565,13 @@ const game = {
 
 		//checks for end of turn
 
-		const curPlay = game[`player${game.whichPlayer}`];
+		const curPlay = game.players[`player${game.whichPlayer}`];
 		let totalDead = 0;
 
 		//counts how many players are dead
 
 		for (let i = 1; i <= this.totalPlayers; i++){
-			const player = this[`player${i}`]
+			const player = this.players[`player${i}`]
 			if (player.HP === 0 && player.isAlive === true) {
 				player.isAlive = false;
 				totalDead++;
@@ -558,7 +601,7 @@ const game = {
 			$('#game-board').css({'box-shadow': '0px 0px 0px black'})
 
 			// add player switch screen
-			const nextPlayer = game[`player${game.whichPlayer}`]
+			const nextPlayer = game.players[`player${game.whichPlayer}`]
 
 			//create trurn transiation screen
 
@@ -613,7 +656,7 @@ const game = {
 
 		//allows player to pass turn without taking all actions
 
-		const curPlay = game[`player${game.whichPlayer}`];
+		const curPlay = game.players[`player${game.whichPlayer}`];
 		curPlay.moveUsed = true;
 		curPlay.attackUsed = true;
 		game.checkTurnEnding();
@@ -629,7 +672,7 @@ const game = {
 
 		//counts dead players
 		for (let i = 1; i <= this.totalPlayers; i++){
-			const player = this[`player${i}`]
+			const player = this.players[`player${i}`]
 			if (player.HP === 0 && player.isAlive === true) {
 				player.isAlive = false;
 				totalDead++;
@@ -640,7 +683,7 @@ const game = {
 		// checks if there is only one player left alive
 		if (totalDead === this.totalPlayers - 1) {	
 			for (let i = 1; i <= this.totalPlayers; i++){
-				const player = this[`player${i}`]
+				const player = this.players[`player${i}`]
 				if (player.isAlive === true) {
 					winner = player;
 				}
@@ -761,10 +804,10 @@ $('.passButton').on('click',()=>{
 })
 
 $('.abilityButton').on('click',()=>{
-	if (game.buttonsActive === true && game[`player${game.whichPlayer}`].abilityUsed === false) {
-		game[`player${game.whichPlayer}`].useAbility()
+	if (game.buttonsActive === true && game.players[`player${game.whichPlayer}`].abilityUsed === false) {
+		game.players[`player${game.whichPlayer}`].useAbility()
 		game.printBoard()
-	} else if (game.buttonsActive !== true && game[`player${game.whichPlayer}`].abilityUsed === false) {
+	} else if (game.buttonsActive !== true && game.players[`player${game.whichPlayer}`].abilityUsed === false) {
 		$('#message-box').text('You have already used your ability this game!')
 		game.animateMessage()
 	}
@@ -780,7 +823,7 @@ $('.classSelector').mouseout( (e) => {
 })
 
 $('.abilityButton').hover( (e) => {
-	$('#popupText').text(game[`player${game.whichPlayer}`].abilityDesc)
+	$('#popupText').text(game.players[`player${game.whichPlayer}`].abilityDesc)
 	$('.popup').css({'visibility':'visible'})
 })
 

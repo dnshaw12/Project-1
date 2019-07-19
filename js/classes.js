@@ -19,7 +19,7 @@ class Player {
 		game.buttonsActive = false;
 
 		const board = $('#game-board').children()
-		const curPlay = game[`player${game.whichPlayer}`]
+		const curPlay = game.players[`player${game.whichPlayer}`]
 
 		//get current players location
 		let currentLeft;
@@ -69,13 +69,13 @@ class Player {
 		//calculates and reduces HP based on attackers damage
 
 		const $opponent = $($(this).children()[0])
-		const opponent = game[`player${$opponent.attr('id')}`]
+		const opponent = game.players[`player${$opponent.attr('id')}`]
 
 		// checks if the attacked tile has a player
 		if ($opponent.hasClass('icon')){
 
-			let $opponentHP = game[`player${$opponent.attr('id')}`].HP
-			const $currPlayerDamage = game[`player${game.whichPlayer}`].damage
+			let $opponentHP = game.players[`player${$opponent.attr('id')}`].HP
+			const $currPlayerDamage = game.players[`player${game.whichPlayer}`].damage
 
 			//different senarios based on if the player has certain abilities active
 			if (!$opponent.hasClass('shielded')) {
@@ -274,7 +274,7 @@ class Player {
 			})
 		}
 		//mark active player's attack as used
-		game[`player${game.whichPlayer}`].attackUsed = true;
+		game.players[`player${game.whichPlayer}`].attackUsed = true;
 	}
 
 	move(e){
@@ -305,22 +305,22 @@ class Player {
 
 		//move animation for player if they are current teleporting
 		const $icon = $(`<img/>`)
-		$icon.attr('src',game[`player${game.whichPlayer}`].icon)
+		$icon.attr('src',game.players[`player${game.whichPlayer}`].icon)
 
 		$icon.css({
 			'width': '10%',
 			'height': '10%',
 			'margin-top': currentTop,
 			'margin-left': currentLeft,
-			'opacity': game[`player${game.whichPlayer}`].opacity
+			'opacity': game.players[`player${game.whichPlayer}`].opacity
 		})
 		game.printBoard()
 		$('#overlay').css('visibility','visible');
 
 		$('#overlay').append($icon)
 
-		if (game[`player${game.whichPlayer}`].abilityActive === 'teleport') {
-			game[`player${game.whichPlayer}`].abilityTurns++
+		if (game.players[`player${game.whichPlayer}`].abilityActive === 'teleport') {
+			game.players[`player${game.whichPlayer}`].abilityTurns++
 
 			$icon.animate({
 				'opacity': '0'
@@ -344,7 +344,7 @@ class Player {
 								}
 							})
 						})
-					game[`player${game.whichPlayer}`].moveUsed = true;
+					game.players[`player${game.whichPlayer}`].moveUsed = true;
 					game.printBoard()
 					game.checkForWin()
 					})
@@ -367,7 +367,7 @@ class Player {
 						}
 					})
 				})
-			game[`player${game.whichPlayer}`].moveUsed = true;
+			game.players[`player${game.whichPlayer}`].moveUsed = true;
 			game.printBoard()
 			game.checkForWin()
 			})		
@@ -400,9 +400,9 @@ class Fighter extends Player {
 		super.initiateAbility()
 		/// Shield Up (half damage for 2 turns)
 
-		game[`player${game.whichPlayer}`].abilityActive = `shielded`
+		game.players[`player${game.whichPlayer}`].abilityActive = `shielded`
 
-		const curPlay = game[`player${game.whichPlayer}`]
+		const curPlay = game.players[`player${game.whichPlayer}`]
 		const board = $('#game-board').children()
 
 		let currCol;
@@ -471,10 +471,10 @@ class Wizard extends Player {
 	useAbility() {
 		super.initiateAbility()
 		/// teleport
-		game[`player${game.whichPlayer}`].abilityActive = `teleport`
-		game[`player${game.whichPlayer}`].speed = 20;
+		game.players[`player${game.whichPlayer}`].abilityActive = `teleport`
+		game.players[`player${game.whichPlayer}`].speed = 20;
 
-		const curPlay = game[`player${game.whichPlayer}`]
+		const curPlay = game.players[`player${game.whichPlayer}`]
 		const board = $('#game-board').children()
 
 		let currCol;
@@ -544,10 +544,10 @@ class Rogue extends Player {
 		//go invisible
 		super.initiateAbility()
 
-		game[`player${game.whichPlayer}`].abilityActive = `invisible`
-		game[`player${game.whichPlayer}`].opacity = 0.3
+		game.players[`player${game.whichPlayer}`].abilityActive = `invisible`
+		game.players[`player${game.whichPlayer}`].opacity = 0.3
 
-		const curPlay = game[`player${game.whichPlayer}`]
+		const curPlay = game.players[`player${game.whichPlayer}`]
 		const board = $('#game-board').children()
 
 		let currCol;
@@ -613,12 +613,6 @@ class Square {
 		this.id = `${col}-${row}`;
 		this.row = row;
 		this.column = col;
-		if (row === 1 && col === 1) {
-			this.player = 1;
-		} else if (row === 10 && col === 10) {
-			this.player = 2;
-		} else {
-			this.player = 0;
-		}
+		this.player = 0;
 	}
 }
