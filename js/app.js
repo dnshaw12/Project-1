@@ -297,16 +297,22 @@ const game = {
 				//////
 
 				for (let i = 1; i <= this.totalPlayers; i++){
-					const $icon = $(`<img src="${this.players[`player${i}`].icon}" class='icon ${this.players[`player${i}`].abilityActive}' id=${i} height="100%" width="100%">`)
-					if (sq.player === i) {
-						$div.append($icon)
-						this.players[`player${i}`].currentPosition = $div
-						$div.on('click',(e) => {
+					// only print icon if player is alive
+					if (this.players[`player${i}`].isAlive) {
 
-						this.highlightMoves(e.currentTarget);
+						const $icon = $(`<img src="${this.players[`player${i}`].icon}" class='icon ${this.players[`player${i}`].abilityActive}' id=${i} height="100%" width="100%">`)
+						if (sq.player === i) {
+							$div.append($icon)
+							this.players[`player${i}`].currentPosition = $div
+							$div.on('click',(e) => {
+
+							this.highlightMoves(e.currentTarget);
 
 
-					})
+							})
+						}
+					} else {
+						console.log($div.data('row-num'),$div.data('column-num'));
 					}
 				}
 				$('#game-board').append($div)
@@ -665,8 +671,18 @@ const game = {
 		game.checkTurnEnding();
 	},
 
+	removePlayer(divCol, divRow){
+
+		const $div = $(`#${divCol}-${divRow}`)
+		// removes player icon that died
+		$div.empty()
+
+		// removed player from game baord
+		this.board[divRow - 1][divCol - 1].player = 0
+		
+	},
+
 	checkForWin(){
-		console.log('cfw');
 		//checks for a winner
 
 		this.updateStats()
@@ -681,7 +697,6 @@ const game = {
 				totalDead++;
 			}	
 		}
-		console.log(totalDead);
 
 		// checks if there is only one player left alive
 		if (totalDead === this.totalPlayers - 1) {	
@@ -759,7 +774,6 @@ const game = {
 
 $('#numSelector').on('click',(e)=>{
 	game.totalPlayers = parseInt($(e.target).attr('id'));
-	console.log(game.totalPlayers);
 	$('#playerNumSelector').css('visibility','hidden')
 
 })

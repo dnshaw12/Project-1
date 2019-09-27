@@ -112,6 +112,10 @@ class Player {
 			$('#message-box').text('You missed!')
 			game.animateMessage()
 		}
+
+		if (opponent.HP === 0) {
+			game.removePlayer(enemyCol, enemyRow)
+		}
 		game.checkForWin()		
 	}
 
@@ -220,7 +224,6 @@ class Player {
 			}
 
 			const $knife = $(`<img/>`)
-			console.log(game.players[`player${game.whichPlayer}`].opacity, 'WHICH PLAYER');
 
 			$knife.attr('src',curPlay.icon)
 			$knife.css({
