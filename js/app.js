@@ -12,7 +12,6 @@ const game = {
 	totalPlayers: 0,
 	whichPlayer: 1,
 	buttonsActive: true,
-	lastTurnDamage: 0,
 	board:[],
 	classDesc: {
 		rogue: "Fast and silent fighter. Moves quickly but less damage. Ability: Invisibility",
@@ -630,7 +629,7 @@ const game = {
 			const $button = $(`<button id="start-turn">Take Turn</button>`)
 			$div.addClass('turnSwitch')
 			const $p = $(`<p>Turn ${this.turn}: It's ${nextPlayer.name}: the ${nextPlayer.class}'s turn!</p>`)
-			const $p2 = $(`<p>You took ${this.lastTurnDamage} damage!</p>`)
+			const $p2 = $(`<p>You took ${game.players[`player${game.whichPlayer}`].lastTurnDamage} damage!</p>`)
 			$p.css({
 				'color': 'black',
 				'text-align': 'center',
@@ -669,7 +668,7 @@ const game = {
 			}
 			
 			$('#message-box').text('')
-			this.lastTurnDamage = 0;
+			game.players[`player${game.whichPlayer}`].lastTurnDamage = 0;
 		}
 	},
 

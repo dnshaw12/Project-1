@@ -12,6 +12,7 @@ class Player {
 		this.abilityActive = null;
 		this.abilityUsed = false;
 		this.opacity = 1;
+		this.lastTurnDamage = 0;
 	}
 
 	attack(e){
@@ -85,7 +86,7 @@ class Player {
 						opponent.HP = 0;
 					} else {
 						opponent.HP -= $currPlayerDamage;
-						game.lastTurnDamage = $currPlayerDamage;
+						opponent.lastTurnDamage += $currPlayerDamage;
 					}
 				} else if ($opponent.hasClass('invisible')) {
 
@@ -95,7 +96,7 @@ class Player {
 						opponent.HP = 0;
 					} else {
 						opponent.HP -= $currPlayerDamage;
-						game.lastTurnDamage = $currPlayerDamage;
+						opponent.lastTurnDamage += $currPlayerDamage;
 					}
 				}
 			} else {
