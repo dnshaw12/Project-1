@@ -106,7 +106,7 @@ class Player {
 					opponent.HP = 0;
 				} else {
 					opponent.HP -= $currPlayerDamage/2;
-					game.lastTurnDamage = $currPlayerDamage/2;
+					opponent.lastTurnDamage += $currPlayerDamage/2;
 				}
 			}
 			if (opponent.HP === 0) {
