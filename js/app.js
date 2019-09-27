@@ -117,7 +117,7 @@ const game = {
 			} else {
 				game.whichPlayer = 1;
 				$(e.target).parent().css('visibility','hidden')
-				// game.startGame()
+				game.startGame()
 			}
 		}
 	},
@@ -235,6 +235,7 @@ const game = {
 			this.board[0][0].player = 1;
 			this.board[9][9].player = 2;
 		}
+		console.log(this);
 		this.printBoard()
 		$('#game-board').css({'box-shadow': '10px 10px 5px black'})
 	},

@@ -220,6 +220,7 @@ class Player {
 			}
 
 			const $knife = $(`<img/>`)
+			console.log(game.players[`player${game.whichPlayer}`], 'WHICH PLAYER');
 
 			$knife.attr('src',curPlay.icon)
 			$knife.css({
