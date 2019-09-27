@@ -220,7 +220,7 @@ class Player {
 			}
 
 			const $knife = $(`<img/>`)
-			console.log(game.players[`player${game.whichPlayer}`], 'WHICH PLAYER');
+			console.log(game.players[`player${game.whichPlayer}`].opacity, 'WHICH PLAYER');
 
 			$knife.attr('src',curPlay.icon)
 			$knife.css({
@@ -230,7 +230,7 @@ class Player {
 				'margin-left': currentLeft,
 				'transform':`rotate(${degrees+225}deg)`,
 				'position': 'absolute',
-				'opacity': game[`player${game.whichPlayer}`].opacity
+				'opacity': game.players[`player${game.whichPlayer}`].opacity
 			})
 
 
