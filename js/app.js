@@ -311,8 +311,6 @@ const game = {
 
 							})
 						}
-					} else {
-						console.log($div.data('row-num'),$div.data('column-num'));
 					}
 				}
 				$('#game-board').append($div)
@@ -518,13 +516,14 @@ const game = {
 	},
 
 	handleInvisible(invisiblePlayer){
+		console.log(invisiblePlayer);
 
 		//executes when player either steps on or attackes invisible player
 
 		$('#message-box').text('You found an invisible person!');
 		this.animateMessage();
 
-		$unhide = this[`player${invisiblePlayer}`];
+		$unhide = this.players[`player${invisiblePlayer}`];
 
 		//reset ability stats
 		$unhide.abilityActive = null;
@@ -581,8 +580,7 @@ const game = {
 
 		for (let i = 1; i <= this.totalPlayers; i++){
 			const player = this.players[`player${i}`]
-			if (player.HP === 0 && player.isAlive === true) {
-				player.isAlive = false;
+			if (player.isAlive === false) {
 				totalDead++;
 			}	
 		}
@@ -593,14 +591,28 @@ const game = {
 
 			$(`.stats`).css('visibility','hidden')
 
-			//change turn to next players
+			//change turn to next players if player is alive
 
-			if (this.whichPlayer !== this.totalPlayers) {
-				this.whichPlayer++;
-			} else {
-				this.whichPlayer = 1;
-				this.turn++;
+			const updateWhichPlayer = () => {
+
+				if (game.whichPlayer !== game.totalPlayers) {
+					if (game.players[`player${game.whichPlayer + 1}`].isAlive) {
+						game.whichPlayer++;
+					} else {
+						game.whichPlayer++;
+						updateWhichPlayer()
+					}
+				} else {
+					if (game.players.player1.isAlive) {
+						game.whichPlayer = 1;
+					} else {
+						game.whichPlayer = 1;
+						updateWhichPlayer()
+					}
+				}
 			}
+
+			updateWhichPlayer()
 
 			//reset game mechanics for new turn
 
@@ -671,14 +683,19 @@ const game = {
 		game.checkTurnEnding();
 	},
 
-	removePlayer(divCol, divRow){
+	killPlayer(divCol, divRow){
 
 		const $div = $(`#${divCol}-${divRow}`)
 		// removes player icon that died
 		$div.empty()
 
-		// removed player from game baord
+		const deadPlayer = this.board[divRow - 1][divCol - 1].player
+
+		// removed player from game board
 		this.board[divRow - 1][divCol - 1].player = 0
+
+		//assigns player as no alive
+		this.players[`player${deadPlayer}`].isAlive = false
 		
 	},
 
@@ -692,8 +709,7 @@ const game = {
 		//counts dead players
 		for (let i = 1; i <= this.totalPlayers; i++){
 			const player = this.players[`player${i}`]
-			if (player.HP === 0 && player.isAlive === true) {
-				player.isAlive = false;
+			if (player.isAlive === false) {
 				totalDead++;
 			}	
 		}

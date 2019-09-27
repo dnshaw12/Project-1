@@ -108,14 +108,14 @@ class Player {
 					game.lastTurnDamage = $currPlayerDamage/2;
 				}
 			}
+			if (opponent.HP === 0) {
+				game.killPlayer(enemyCol, enemyRow)
+			}
 		} else { //if no player in a square
 			$('#message-box').text('You missed!')
 			game.animateMessage()
 		}
 
-		if (opponent.HP === 0) {
-			game.removePlayer(enemyCol, enemyRow)
-		}
 		game.checkForWin()		
 	}
 
