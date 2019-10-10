@@ -387,7 +387,7 @@ class Fighter extends Player {
 	constructor(name, playerNum){
 		super(name, playerNum);
 		this.class = 'Fighter';
-		this.HP = 5;
+		this.HP = 16;
 		this.speed = 4;
 		this.damage = 5;
 		this.range = 1;
